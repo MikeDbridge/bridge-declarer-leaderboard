@@ -1,0 +1,1 @@
+import{s as p,h as a}from"./nav-aRKDhcJG.js";import{r}from"./calendarView-DIOHmfzy.js";function t(){const e=document.getElementById("app");e.classList.add("cal-app");const{nodes:s,summary:n}=r();e.append(p("calendar"),a("header",{class:"app-header"},[a("h1",{},["Tournament Data Map"]),a("p",{class:"tagline"},[n])]),...s)}t();
