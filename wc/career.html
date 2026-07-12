@@ -95,7 +95,7 @@ tr.hl td{background:rgba(var(--au-rgb),.12)}tr.hl td.nm{box-shadow:inset 3px 0 0
  <div id="body"></div>
 
  <section class="legend">
-  <b>F1</b> tricks vs double-dummy (declarer) / holding declarer below DD (defence) · <b>F2</b> tricks vs the same-contract field · <b>F3</b> making / defeating vs field · <b>F4</b> that trick edge in IMPs — <b>the ranking</b>. Green beats the field, red trails it. <b>Champs</b> = number of championships · span. Click any country to highlight it. Seat/side toggle = whether peers must be the exact declarer seat (default) or either seat of the side.
+  <b>comp bd</b> = boards actually in this analysis — those with a same-contract field (the F2/F3/F4 sample, which shrinks under same-seat) — over total boards declared (the F1 sample; double-dummy needs no field, so every declared board counts and it's evaluated for the actual declaring direction). The left number moves with the seat/side toggle; the right does not. · <b>F1</b> tricks vs double-dummy (declarer) / holding declarer below DD (defence) · <b>F2</b> tricks vs the same-contract field · <b>F3</b> making / defeating vs field · <b>F4</b> that trick edge in IMPs — <b>the ranking</b>. Green beats the field, red trails it. <b>Champs</b> = number of championships · span. Click any country to highlight it. Seat/side toggle = whether peers must be the exact declarer seat (default) or either seat of the side.
  </section>
  <p class="foot">Career F4 regresses toward zero vs single-event figures (more boards, more averaging), so the spread is tighter — a sustained <b>+0.5 IMP/board over 400+ boards</b> across multiple world championships is elite. Declarer, defender-individual and partnership are three separate rankings; defenders are pooled across all partners, partnerships only over boards those two played together.</p>
 </div>
@@ -119,13 +119,13 @@ function draw(){
     '<td class="pl nm" title="'+(view==='defp'?r.members.join(' & '):r.name)+'">'+nameCol(r)+'</td>'+
     '<td class="pl tm">'+r.team+'</td>'+
     '<td class="pl ch">'+r.champs+' · '+r.span+'</td>'+
-    '<td class="mono" style="color:var(--mut)">'+r.n+'</td>'+
+    '<td class="mono" title="'+(r[mode].np||0)+' boards with a same-contract field (F2/F3/F4 sample) / '+r.n+' declared with a double-dummy reference (F1 sample)">'+(r[mode].np||0)+'<span style="color:var(--mut)">/'+r.n+'</span></td>'+
     cell(r.f1,CAP.f1,' gs')+cell(r[mode].f2,CAP.f2)+cell(r[mode].f3,CAP.f3)+cell(r[mode].f4,CAP.f4,' f4')+'</tr>').join('');
   const nm = view==='defp'?'Pair':'Player';
   const f1lab = view==='decl'?'F1 trk/DD':'F1 held';
   document.getElementById('rd').innerHTML='<b>'+rows.length+'</b> of '+all.length+' '+(view==='defp'?'partnerships':'players')+' with <b>≥'+minB+'</b> boards';
   document.getElementById('body').innerHTML='<div class="scroll"><table><thead><tr>'+
-    '<th class="rk">#</th><th class="pl">'+nm+'</th><th class="pl">Team</th><th class="pl">Champs</th><th>bd</th>'+
+    '<th class="rk">#</th><th class="pl">'+nm+'</th><th class="pl">Team</th><th class="pl">Champs</th><th title="compared boards (same-contract field, F2/F3/F4) / total declared (double-dummy field, F1)">comp bd</th>'+
     '<th class="gs">'+f1lab+'</th><th>F2 trk/fld</th><th>F3 '+(view==='decl'?'make':'set')+'</th><th class="f4">F4 IMP</th>'+
     '</tr></thead><tbody>'+body+'</tbody></table></div>';
 }
