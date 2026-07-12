@@ -11,7 +11,11 @@
 param([switch]$NoBuild)
 $ErrorActionPreference = 'Stop'
 
-$app    = 'C:\Claude\WesDeal-app'
+# Build from the MAIN worktree, not WesDeal-app: main is the working copy that
+# has the app source, the research generators, AND the physical DB together, so
+# its committed research/*.json (e.g. calendar-data.json) is the fresh one. The
+# app-only worktree bundles stale data.
+$app    = 'C:\Claude\WesDeal'
 $deploy = 'C:\Claude\bridge-declarer-leaderboard'
 $dst    = Join-Path $deploy 'wesdeal'
 $dist   = Join-Path $app 'dist'
