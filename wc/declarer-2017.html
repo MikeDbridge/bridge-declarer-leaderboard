@@ -116,8 +116,8 @@ table.aud .gs{border-left:1px solid var(--line)}
 .recon b{color:var(--ink)}
 </style>
 <div class="wrap">
- <h1>Declarer leaderboard — four facets, 2017 World Championships</h1>
- <p class="sub">Every declarer with ≥40 boards in each division, ranked by <b>F4</b> — trick-taking scored in IMPs against the field <b>in the identical contract</b> on the same deal. The lighter facets show the same skill through different lenses; ranking uses the stakes-weighted one.</p>
+ <h1>Declarer leaderboard — 2017 World Championships</h1>
+ <p class="sub">Every declarer with ≥40 boards in each division, ranked by the <b>IMPs each gained versus the field</b> in the identical contract on the same deal. The other columns show the same skill through different lenses; the ranking uses the stakes-weighted one.</p>
  <p class="prov"><b>Source</b> Lyon 2017 · RR + KO · peers = other tables in the same strain+level+side on that deal · leave-one-out</p>
  <section class="legend">
   <div><h2>F1 · tricks vs DD</h2><p>Actual tricks − double-dummy. The single-reference measure — useful, but DD is one fixed yardstick, not the field.</p></div>
@@ -174,7 +174,7 @@ function tableFor(ev){
     '<td class="rk">'+(i+1)+'</td><td class="pl nm">'+p.name+'</td><td class="pl tm">'+p.team+'</td>'+
     '<td class="mono bd'+(p.low?' low':'')+'" title="'+(v.np||0)+' boards in this comparison (all facets) / '+p.n+' declared">'+(v.np||0)+(p.low?'*':'')+'<span style="color:var(--mut)">/'+p.n+'</span></td>'+
     cell(v.f1,CAP.f1,' gs')+cell(v.f2,CAP.f2)+cell(v.f3,CAP.f3)+cell(v.f4,CAP.f4,' f4')+'</tr>';}).join('');
-  return '<p class="count">'+d.players.length+' declarers, ranked by <b>F4</b> ('+(mode==='seat'?'same contract &amp; <b>same declarer seat</b>':'same contract, <b>either seat</b> of the side')+'). <b>Click any country</b> to highlight'+(hlTeam?' — showing <b>'+hlTeam+'</b>':'')+'. <i>*</i> = &lt;30 boards (Australians always shown).</p>'+
+  return '<p class="count">'+d.players.length+' declarers, ranked by the <b>IMPs each gained versus the field playing the same contract</b> ('+(mode==='seat'?'<b>same declarer seat</b>':'<b>either seat</b> of the side')+'). <b>Click any country</b> to highlight'+(hlTeam?' — showing <b>'+hlTeam+'</b>':'')+'. <i>*</i> = &lt;30 boards (Australians always shown).</p>'+
    '<div class="scroll"><table><thead><tr>'+
    '<th class="rk">#</th><th class="pl">Player</th><th class="pl">Team</th><th title="boards in this comparison (all facets) / total declared">comp bd</th>'+
    '<th class="gs">F1 trk/DD</th><th>F2 trk/fld</th><th>F3 make</th><th class="f4">F4 IMP</th>'+

@@ -112,8 +112,8 @@ table.aud td.dim{color:var(--mut)}table.aud .gs{border-left:1px solid var(--line
 .recon code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;background:var(--surface);padding:1px 5px;border-radius:4px}.recon b{color:var(--ink)}
 </style>
 <div class="wrap">
- <h1>Defender leaderboard — four facets, 2022 World Championships</h1>
- <p class="sub">Every partnership with ≥40 defended boards in each division, ranked by <b>F4</b> — their trick-taking on defence scored in IMPs against the field <b>in the identical contract</b> on the same deal. Both partners share every board; the two columns on the right split that IMP result by which partner made the <b>opening lead</b>.</p>
+ <h1>Defender leaderboard — 2022 World Championships</h1>
+ <p class="sub">Every partnership with ≥40 defended boards in each division, ranked by the <b>IMPs their defence gained versus the field</b> in the identical contract on the same deal. Both partners share every board; the two columns on the right split that IMP result by which partner made the <b>opening lead</b>.</p>
  <p class="prov"><b>Source</b> Salsomaggiore 2022 · RR + KO · peers = other tables in the same contract on that deal · leave-one-out · <b>caveat:</b> results can't fully separate great defence from declarer error — read vs the field</p>
  <section class="legend">
   <div><h2>F1 · tricks vs DD</h2><p>Double-dummy declarer tricks − actual. Positive = you held declarer below double-dummy.</p></div>
@@ -170,7 +170,7 @@ function tableFor(ev){
     '<td class="pl tm">'+p.team+'</td><td class="mono bd'+(p.low?' low':'')+'" title="'+(v.nPeer||0)+' boards in this comparison (all facets) / '+p.n+' defended">'+(v.nPeer||0)+(p.low?'*':'')+'<span style="color:var(--mut)">/'+p.n+'</span></td>'+
     cell(v.f1,CAP.f1,' gs')+cell(v.f2,CAP.f2)+cell(v.f3,CAP.f3)+cell(v.f4,CAP.f4,' f4')+
     leadCell(p.members[0].sur,v.lead[0],v.leadN[0],' gs')+leadCell(p.members[1].sur,v.lead[1],v.leadN[1])+'</tr>';}).join('');
-  return '<p class="count">'+d.pairs.length+' partnerships, ranked by <b>F4</b> ('+(mode==='seat'?'same contract &amp; <b>same declarer seat</b>':'same contract, <b>either seat</b> of the side')+'). <b>Click any country</b> to highlight'+(hlTeam?' — showing <b>'+hlTeam+'</b>':'')+'. <i>*</i> = &lt;60 boards (Australians always shown).</p>'+
+  return '<p class="count">'+d.pairs.length+' partnerships, ranked by the <b>IMPs each gained on defence versus the field in the same contract</b> ('+(mode==='seat'?'<b>same declarer seat</b>':'<b>either seat</b> of the side')+'). <b>Click any country</b> to highlight'+(hlTeam?' — showing <b>'+hlTeam+'</b>':'')+'. <i>*</i> = &lt;60 boards (Australians always shown).</p>'+
    '<div class="scroll"><table><thead>'+
    '<tr class="g1"><th class="rk"></th><th class="pl"></th><th class="pl"></th><th></th>'+
    '<th class="gs" colspan="4">defence vs field</th><th class="gs" colspan="2">F4 split by opening leader</th></tr>'+
