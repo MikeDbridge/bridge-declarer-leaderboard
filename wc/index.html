@@ -58,7 +58,7 @@ h1{font-size:clamp(22px,3vw,30px);margin:0 0 6px;letter-spacing:-.02em}
 .legend>summary::-webkit-details-marker{display:none}
 .legend>summary::before{content:'▸ '}.legend[open]>summary::before{content:'▾ '}
 .legend .term{padding:4px 16px;line-height:1.5}.legend .term:last-child{padding-bottom:13px}
-.legend .term b{color:var(--ink);margin-right:5px}
+.legend .term b{color:var(--ink);text-transform:uppercase;letter-spacing:.04em;font-size:11px;margin-right:7px}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 12px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}
 .tab{padding:7px 15px;border:1px solid var(--line);background:var(--surface);color:var(--mut);border-radius:20px;cursor:pointer;font-size:13.5px;font-weight:600}
 .tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -122,7 +122,7 @@ table.aud .gs{border-left:1px solid var(--line)}
  <h1>Declarer leaderboard, 2025 World Championships</h1>
  <p class="sub"><b>Every declarer at the Herning 2025 championship, ranked by the IMPs each gained versus the field in the identical contract on the same deal.</b></p>
  <details class="legend">
-  <summary>Terminology</summary>
+  <summary>What the columns mean</summary>
   <div class="term"><b>comp bd</b> boards in this comparison / total declared; every column is averaged over the left number (boards where another table played your exact contract at the matched seat)</div>
   <div class="term"><b>tricks v DD</b> your tricks minus double-dummy, one fixed yardstick</div>
   <div class="term"><b>tricks v field</b> your tricks minus the average of other declarers in the same contract</div>
