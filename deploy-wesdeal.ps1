@@ -1,11 +1,11 @@
 # Publish the WesDeal app to https://wesbridge.net/wesdeal/
 #
-# The app SOURCE lives in a separate repo/worktree (C:\Claude\WesDeal-app) that
+# The app SOURCE lives in the WesDeal repo next to this one (..\WesDeal), which
 # Cloudflare does NOT serve. Cloudflare serves THIS repo. So a deploy = build the
 # app, copy its dist/ into ./wesdeal/, commit, and push (Cloudflare auto-deploys
 # on push to main, ~10-30s).
 #
-# Run from anywhere:  pwsh C:\Claude\bridge-declarer-leaderboard\deploy-wesdeal.ps1
+# Run from anywhere:  pwsh C:\Claude\Bridge\bridge-declarer-leaderboard\deploy-wesdeal.ps1
 # Skip the rebuild (publish an existing dist):  ... deploy-wesdeal.ps1 -NoBuild
 
 param([switch]$NoBuild)
@@ -15,8 +15,9 @@ $ErrorActionPreference = 'Stop'
 # has the app source, the research generators, AND the physical DB together, so
 # its committed research/*.json (e.g. calendar-data.json) is the fresh one. The
 # app-only worktree bundles stale data.
-$app    = 'C:\Claude\WesDeal'
-$deploy = 'C:\Claude\bridge-declarer-leaderboard'
+# Both paths come from this script's own folder, so moving the pair keeps it working.
+$deploy = $PSScriptRoot
+$app    = Join-Path (Split-Path -Parent $PSScriptRoot) 'WesDeal'
 $dst    = Join-Path $deploy 'wesdeal'
 $dist   = Join-Path $app 'dist'
 
