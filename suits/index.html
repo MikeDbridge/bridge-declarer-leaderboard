@@ -1,0 +1,461 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Suit Combination Challenge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one problem at a time, a column-style diagram on top, the lines as answer slips below; score strip in the header. */
+:root {
+  --paper: #f2f4f3;
+  --surface: #ffffff;
+  --ink: #18201e;
+  --muted: #5c6865;
+  --line: #d6dcda;
+  --baize: #1f5c4a;
+  --baize-soft: #e2efe9;
+  --heart: #c0303c;
+  --amber: #a8620c;
+  --amber-soft: #fbefdf;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121816; --surface: #1a2220; --ink: #e6ecea; --muted: #9aa8a4; --line: #2f3b38;
+  --baize: #5fbf9b; --baize-soft: #1d3a31; --heart: #f0707a; --amber: #e6a24c; --amber-soft: #3a2c18; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121816; --surface: #1a2220; --ink: #e6ecea; --muted: #9aa8a4; --line: #2f3b38;
+  --baize: #5fbf9b; --baize-soft: #1d3a31; --heart: #f0707a; --amber: #e6a24c; --amber-soft: #3a2c18; color-scheme: dark }
+
+[hidden] { display: none !important; }
+body { background: var(--paper); color: var(--ink); font: 400 1rem/1.5 var(--font-body); }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+h1 { font: 750 1.6rem/1.1 var(--font-display); margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 .suit { color: var(--heart); }
+.stats { display: flex; gap: 18px; flex-wrap: wrap; }
+.stat { display: grid; }
+.stat b { font: 600 1.15rem var(--font-mono); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+
+details.filters { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+details.filters summary { cursor: pointer; font-weight: 600; }
+details.filters summary .count { font-weight: 400; color: var(--muted); }
+.frows { display: grid; gap: 10px; margin-top: 12px; }
+.frow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.idbox { font: 500 0.85rem var(--font-mono); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; width: 90px; }
+.flabel { width: 74px; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.chip { font: 500 0.85rem var(--font-body); border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 3px 11px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--baize); border-color: var(--baize); color: var(--surface); }
+button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2px solid var(--baize); outline-offset: 2px; }
+
+.problem { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 16px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.8rem; color: var(--muted); }
+.tag { border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; font-family: var(--font-mono); font-size: 0.75rem; }
+.tag.auction { border-color: var(--amber); color: var(--amber); }
+.auction-box { background: var(--amber-soft); border-radius: 6px; padding: 10px 12px; font-weight: 500; }
+.auction-box .s, .bid .s { color: var(--ink); }
+.red { color: var(--heart); }
+
+.diagram { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: auto auto auto; align-items: center; justify-items: center; gap: 6px 10px; font-family: var(--font-mono); }
+.hand { font: 600 1.35rem var(--font-mono); letter-spacing: 0.04em; white-space: nowrap; }
+.hand .suit { color: var(--heart); margin-right: 6px; }
+.seat { font: 500 0.7rem var(--font-body); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; text-align: center; }
+.n { grid-column: 2; grid-row: 1; } .s { grid-column: 2; grid-row: 3; }
+.w { grid-column: 1; grid-row: 2; justify-self: end; } .e { grid-column: 3; grid-row: 2; justify-self: start; }
+.compass { grid-column: 2; grid-row: 2; width: 64px; height: 64px; border: 1px solid var(--line); border-radius: 6px; display: grid; place-items: center; font: 500 0.75rem var(--font-body); color: var(--muted); }
+.side { font: 500 0.8rem var(--font-body); color: var(--muted); text-align: center; }
+.known { display: block; font: 600 1rem var(--font-mono); color: var(--ink); letter-spacing: 0.06em; white-space: nowrap; margin-top: 4px; }
+.known small { display: block; font: 500 0.72rem var(--font-body); color: var(--muted); letter-spacing: 0; margin-top: 1px; }
+.ns-known { grid-column: 1 / -1; grid-row: 4; white-space: nowrap; font: 500 0.78rem var(--font-body); color: var(--muted); }
+.goal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
+.goal b { font: 600 1.25rem var(--font-display); }
+.goal small { color: var(--muted); }
+
+.choices { display: grid; gap: 10px; }
+.choice { text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: start; }
+.choice:hover:not([disabled]) { border-color: var(--baize); }
+.choice[disabled] { cursor: default; }
+.key { font: 600 0.8rem var(--font-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; margin-top: 2px; }
+.head { font-weight: 600; min-width: 0; }
+.steps { grid-column: 2; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 0.92rem; min-width: 0; }
+.pct { grid-column: 3; grid-row: 1; font: 600 1rem var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.choice.best { border-color: var(--baize); background: var(--baize-soft); }
+.choice.mine:not(.best) { border-color: var(--amber); background: var(--amber-soft); }
+.badge { font: 600 0.7rem var(--font-body); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 8px; color: var(--baize); }
+.choice.mine:not(.best) .badge { color: var(--amber); }
+
+.verdict { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 14px; }
+.verdict .big { font: 750 1.2rem var(--font-display); }
+.verdict .big.good { color: var(--baize); } .verdict .big.bad { color: var(--amber); }
+.verdict p { margin: 0; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 0.95rem var(--font-body); border-radius: 8px; padding: 8px 16px; cursor: pointer; border: 1px solid var(--baize); background: var(--baize); color: var(--surface); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.flagbox { display: grid; gap: 6px; }
+.flagbox textarea { font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 8px; min-height: 60px; }
+.note { font-size: 0.8rem; color: var(--muted); }
+.empty { padding: 24px; text-align: center; color: var(--muted); }
+
+.recent { display: grid; gap: 4px; font-size: 0.88rem; }
+.recent h2 { font: 600 0.8rem var(--font-body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 4px; }
+.rrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; border-bottom: 1px solid var(--line); padding: 3px 0; }
+.rrow span:last-child { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.rrow .ok { color: var(--baize); } .rrow .miss { color: var(--amber); }
+
+.cmp { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+.cmp p { margin: 0; font-size: 0.92rem; }
+.k-a { background: var(--baize); }
+.k-b { background: var(--amber); }
+.diffs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dcol h4 { margin: 0 0 4px; font: 600 0.88rem var(--font-body); display: flex; justify-content: space-between; gap: 8px; }
+.dcol h4 span { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.dcol.a h4 span { color: var(--baize); } .dcol.b h4 span { color: var(--amber); }
+.lrow { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; font-size: 0.88rem; padding: 4px 0 3px; }
+.lrow .who { font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lrow .who small { font-family: var(--font-body); color: var(--muted); font-size: 0.75rem; margin-right: 5px; }
+.lrow .who small + span { margin-right: 14px; }
+.lrow .pp { font: 500 0.82rem var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.lrow .mini { grid-column: 1 / -1; height: 3px; border-radius: 2px; opacity: 0.75; }
+.dcol .none, .dcol .more { color: var(--muted); font-size: 0.85rem; padding-top: 4px; }
+@media (max-width: 560px) { .diffs { grid-template-columns: 1fr; } }
+
+@media (max-width: 480px) {
+  .hand { font-size: 1.1rem; }
+  .compass { width: 44px; height: 44px; }
+  .choice { grid-template-columns: auto 1fr; }
+  .pct { grid-column: 2; grid-row: auto; }
+}
+@media (prefers-reduced-motion: no-preference) { .choice { transition: border-color .15s, background .15s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1><span class="suit">&hearts;</span> Suit Combination Challenge</h1>
+    <div class="stats" aria-label="Your score">
+      <div class="stat"><b id="st-played">0</b><span>Played</span></div>
+      <div class="stat"><b id="st-best">-</b><span>Best line found</span></div>
+      <div class="stat"><b id="st-lost">-</b><span>Avg pp lost</span></div>
+      <div class="stat"><b id="st-streak">0</b><span>Streak</span></div>
+    </div>
+  </header>
+
+  <details class="filters" id="filters">
+    <summary>Choose problems <span class="count" id="f-count"></span></summary>
+    <div class="frows">
+      <div class="frow"><span class="flabel">Cards</span><div id="f-k" class="frow"></div></div>
+      <div class="frow"><span class="flabel">Kind</span><div id="f-kind" class="frow"></div></div>
+      <div class="frow"><span class="flabel">Margin</span><div id="f-band" class="frow"></div></div>
+      <div class="frow"><span class="flabel">Show</span><div id="f-seen" class="frow"></div></div>
+      <form class="frow" id="f-go"><label class="flabel" for="f-id">Problem</label><input id="f-id" class="idbox" placeholder="g0001" autocomplete="off" spellcheck="false"><button type="submit" class="chip">Go</button><span class="note" id="f-gomsg"></span></form>
+    </div>
+  </details>
+
+  <main id="main" class="problem" aria-live="polite"><div class="empty">Loading problems...</div></main>
+
+  <section class="recent" id="recent" hidden></section>
+  <p class="note" id="savenote">One suit, no trumps, no ruffs, unlimited entries, best defence. Percentages from two independent solvers that agree exactly.</p>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const RANKS = 'AKQJT98765432';
+  const BANDS = [['clear', 'Clear'], ['medium', 'Medium'], ['close', 'Close'], ['near-tie', 'Near tie']];
+  const KINDS = [['plain', 'Plain'], ['auction', 'Auction']];
+  const SEEN = [['new', 'Not played'], ['played', 'Played'], ['missed', 'Missed']];
+  let ALL = [], BYID = new Map();
+  let picks = {};       // id -> {i: original line index, lost, at, seq}
+  let flags = {};       // id -> note
+  let seq = 0;
+  let store = null;     // {save(body)} for the db doc, or null for local only
+  let current = null, order = null, answered = false;
+  const state = { k: new Set(), kind: new Set(), band: new Set(), seen: new Set(['new']) };
+
+  const card = r => r === 'T' ? '10' : r;
+  const handHtml = h => h.split('').map(card).join(' ');
+  const suitify = s => s.replace(/\b([1-7])([CDHS])\b/g, (m, n, x) => n + ({ C: '<span class="s">&clubs;</span>', D: '<span class="red">&diams;</span>', H: '<span class="red">&hearts;</span>', S: '<span class="s">&spades;</span>' })[x]);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const isBest = (p, ln) => ln.pct >= p.best - 1e-9;
+
+  function readLocal() { try { return JSON.parse(localStorage.getItem('scc-progress') || 'null'); } catch (e) { return null; } }
+  function writeLocal(body) { try { localStorage.setItem('scc-progress', JSON.stringify(body)); } catch (e) {} }
+  function readFilters() { try { const f = JSON.parse(localStorage.getItem('scc-filters') || 'null'); if (f) for (const k of Object.keys(state)) if (Array.isArray(f[k])) state[k] = new Set(f[k]); } catch (e) {} }
+  function writeFilters() { try { localStorage.setItem('scc-filters', JSON.stringify(Object.fromEntries(Object.entries(state).map(([k, v]) => [k, [...v]])))); } catch (e) {} }
+  function body() { return { v: 1, seq, picks, flags }; }
+  function load(b) { if (!b) return; picks = b.picks || {}; flags = b.flags || {}; seq = b.seq || Object.keys(picks).length; }
+
+  let saving = Promise.resolve();
+  function save() {
+    const b = body();
+    writeLocal(b);
+    if (store) saving = saving.then(() => store.save(b)).catch(() => { $('savenote').textContent = 'Saved on this device only: the shared store did not accept the last save.'; });
+  }
+
+  function chipRow(el, items, key) {
+    el.innerHTML = '';
+    for (const [val, label] of items) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = label;
+      b.setAttribute('aria-pressed', state[key].has(val) ? 'true' : 'false');
+      b.onclick = () => { state[key].has(val) ? state[key].delete(val) : state[key].add(val); b.setAttribute('aria-pressed', state[key].has(val) ? 'true' : 'false'); writeFilters(); refreshCount(); if (!answered) next(); };
+      el.appendChild(b);
+    }
+  }
+
+  function seenOf(p) { const x = picks[p.id]; if (!x) return 'new'; return x.lost > 1e-9 ? 'missed' : 'played'; }
+  function matches(p) {
+    if (state.k.size && !state.k.has(String(p.k))) return false;
+    if (state.kind.size && !state.kind.has(p.kind)) return false;
+    if (state.band.size && !state.band.has(p.band)) return false;
+    if (state.seen.size) { const s = seenOf(p); if (!(state.seen.has(s) || (s === 'missed' && state.seen.has('played')))) return false; }
+    return true;
+  }
+  function refreshCount() { $('f-count').textContent = '(' + ALL.filter(matches).length.toLocaleString() + ' of ' + ALL.length.toLocaleString() + ')'; }
+
+  function stats() {
+    const xs = Object.values(picks);
+    $('st-played').textContent = xs.length.toLocaleString();
+    if (!xs.length) { $('st-best').textContent = '-'; $('st-lost').textContent = '-'; $('st-streak').textContent = '0'; return; }
+    const good = xs.filter(x => x.lost <= 1e-9).length;
+    $('st-best').textContent = Math.round(100 * good / xs.length) + '%';
+    $('st-lost').textContent = (xs.reduce((a, x) => a + x.lost, 0) / xs.length).toFixed(1);
+    const bySeq = xs.slice().sort((a, b) => b.seq - a.seq);
+    let s = 0; for (const x of bySeq) { if (x.lost > 1e-9) break; s++; }
+    $('st-streak').textContent = s;
+    const rec = $('recent');
+    const last = Object.entries(picks).sort((a, b) => b[1].seq - a[1].seq).slice(0, 8);
+    rec.hidden = !last.length;
+    rec.innerHTML = '<h2>Recent</h2>' + last.map(([id, x]) => {
+      const p = BYID.get(id); if (!p) return '';
+      const l = x.lost <= 1e-9 ? '<span class="ok">best</span>' : '<span class="miss">-' + x.lost.toFixed(1) + ' pp</span>';
+      return '<div class="rrow"><span>' + handHtml(p.north) + ' / ' + handHtml(p.south) + ', ' + p.t + ' tricks' + (p.kind === 'auction' ? ', auction' : '') + '</span>' + l + '</div>';
+    }).join('');
+  }
+
+  function shuffle(n) { const a = [...Array(n).keys()]; for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  function next() {
+    const pool = ALL.filter(matches);
+    if (!pool.length) { current = null; $('main').innerHTML = '<div class="empty">No problems match these choices. Turn a chip off, or show played problems too.</div>'; return; }
+    const fresh = pool.filter(p => p !== current);
+    current = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length || pool.length))];
+    order = shuffle(current.lines.length);
+    answered = false;
+    render();
+  }
+
+
+  let LAY;              // id -> {D, L: [[west, east, weight]], m: [hex mask per line]}; undefined while loading, null if absent
+  let cmp = null;       // {a, b}: line indexes compared in the breakdown
+  function bitsOf(hex, n) { const x = BigInt('0x' + (hex || '0')); const out = []; for (let i = 0; i < n; i++) out.push(((x >> BigInt(i)) & 1n) === 1n); return out; }
+  const lenOf = h => h === '-' ? 0 : h.length;
+  const posOf = li => order.indexOf(li) + 1;
+  const f1 = x => x.toFixed(1);
+  const cap = x => x.charAt(0).toUpperCase() + x.slice(1);
+
+  function defaultCmp(p, li) {
+    const all = p.lines.map((_, i) => i);
+    const a = isBest(p, p.lines[li]) ? li : all.filter(i => isBest(p, p.lines[i])).sort((x, y) => posOf(x) - posOf(y))[0];
+    let b = li;
+    if (b === a) {
+      const rest = all.filter(i => i !== a);
+      const below = rest.filter(i => !isBest(p, p.lines[i]));
+      b = (below.length ? below : rest).sort((x, y) => p.lines[y].pct - p.lines[x].pct || posOf(x) - posOf(y))[0];
+    }
+    return { a, b };
+  }
+
+
+  function renderCmp() {
+    const el = $('cmp');
+    if (!el || !current || !cmp) return;
+    const p = current, d = LAY && LAY[p.id];
+    if (LAY === undefined) { el.innerHTML = '<p class="note">Loading...</p>'; return; }
+    if (!d) { el.innerHTML = ''; el.hidden = true; return; }
+    el.hidden = false;
+    const n = d.L.length, D = d.D;
+    const A = bitsOf(d.m[cmp.a], n), B = bitsOf(d.m[cmp.b], n);
+    const mine = picks[p.id] ? picks[p.id].i : -1;
+    const name = i => 'line ' + posOf(i) + (i === mine ? ' (yours)' : isBest(p, p.lines[i]) ? ' (best)' : '');
+    const pc = w => 100 * w / D;
+    // equal cards: runs of missing ranks with no North-South card between them; the lowest run is shown as x
+    const ns = new Set((p.south + p.north).split(''));
+    const runs = []; let run = [];
+    for (const r of RANKS) { if (ns.has(r)) { if (run.length) runs.push(run); run = []; } else run.push(r); }
+    if (run.length) runs.push(run);
+    const lowRun = runs.length ? runs[runs.length - 1] : [];
+    const showHand = h => {
+      const cs = h === '-' ? [] : h.split('');
+      const out = [];
+      runs.forEach(rn => {
+        const c = cs.filter(x => rn.includes(x)).length;
+        if (!c) return;
+        if (rn === lowRun && rn.length > 1) { for (let i = 0; i < c; i++) out.push('x'); return; }
+        if (c === rn.length || rn.length === 1) { rn.forEach(x => out.push(card(x))); return; }
+        out.push(c === 1 ? rn.map(card).join('/') : c + ' of ' + rn.map(card).join(''));
+      });
+      return out.length ? out.join(' ') : 'void';
+    };
+    const merged = new Map();
+    d.L.forEach((L, i) => {
+      if (A[i] === B[i]) return;
+      const c = A[i] ? 'a' : 'b', west = showHand(L[0]), east = showHand(L[1]), key = c + '|' + west + '|' + east;
+      const m = merged.get(key);
+      if (m) m.w += L[2]; else merged.set(key, { c, west, east, w: L[2] });
+    });
+    const rows = [...merged.values()];
+    const colMax = Math.max(1, ...rows.map(m => m.w));
+    const SHOW = 5;
+    const col = (c, who) => {
+      const xs = rows.filter(m => m.c === c).sort((x, y) => y.w - x.w);
+      const tot = xs.reduce((t, m) => t + m.w, 0);
+      let h = '<div class="dcol ' + c + '"><h4>Only ' + esc(who) + ' wins<span>' + f1(pc(tot)) + '%</span></h4>';
+      if (!xs.length) return h + '<div class="none">Never.</div></div>';
+      h += xs.slice(0, SHOW).map(m => '<div class="lrow"><span class="who"><small>West</small><span>' + esc(m.west) + '</span><small>East</small>' + esc(m.east) + '</span><span class="pp">' + pc(m.w).toFixed(1) + '%</span><span class="mini k-' + c + '" style="width:' + (100 * m.w / colMax).toFixed(1) + '%"></span></div>').join('');
+      if (xs.length > SHOW) { const rest = xs.slice(SHOW); h += '<div class="more">and ' + rest.length + ' more, ' + f1(pc(rest.reduce((t, m) => t + m.w, 0))) + '%</div>'; }
+      return h + '</div>';
+    };
+    const na = name(cmp.a), nb = name(cmp.b);
+    let h = '<p>' + esc(cap(na)) + ' makes ' + p.t + ' tricks ' + f1(p.lines[cmp.a].pct) + '% of the time, ' + esc(nb) + ' ' + f1(p.lines[cmp.b].pct) + '%. Where they differ:</p>';
+    h += '<div class="diffs">' + col('a', na) + col('b', nb) + '</div>';
+    const shown = rows.map(m => m.west + ' ' + m.east).join(' ');
+    const notes = [];
+    if (lowRun.length > 1 && shown.split(' ').includes('x')) notes.push('x is any of the ' + lowRun.map(card).join(' '));
+    if (shown.includes('/')) notes.push('K/Q means either of two equal cards');
+    if (/[0-9] of /.test(shown)) notes.push('2 of KQJ means any two of them');
+    if (notes.length) h += '<p class="note">' + notes.join('. ') + '.</p>';
+    el.innerHTML = h;
+  }
+
+  function missing(p) { return RANKS.split('').filter(r => !p.south.includes(r) && !p.north.includes(r)).map(card).join(' '); }
+
+  function render() {
+    const p = current;
+    const a = p.auction;
+    const nMissing = 13 - p.k;
+    let h = '<div class="meta"><span class="tag">' + p.k + ' cards</span><span class="tag">' + p.band + '</span>' + (a ? '<span class="tag auction">auction</span>' : '') + '<span>#' + esc(p.id) + '</span></div>';
+    // the auction's length inferences go on the diagram, not in the text
+    if (a) h += '<div class="auction-box">' + suitify(esc(a.text.replace(/ \((?:West|East) \d[^)]*\)/, '').replace(/ You hold \d+ spades between you\./, ''))) + '</div>';
+    const known = seat => {
+      if (!a) return '';
+      const n = seat === a.bidder ? a.L : a.P;
+      return '<span class="known"><span class="s">&spades;</span> ' + 'x'.repeat(n) + '<small>' + n + ' spades</small></span>';
+    };
+    h += '<div class="diagram">'
+      + '<div class="n"><span class="seat">North</span><span class="hand"><span class="suit">&hearts;</span>' + handHtml(p.north) + '</span></div>'
+      + '<div class="w side"><span class="seat">West</span>' + known('West') + '</div>'
+      + '<div class="compass">' + nMissing + ' out</div>'
+      + '<div class="e side"><span class="seat">East</span>' + known('East') + '</div>'
+      + '<div class="s"><span class="hand"><span class="suit">&hearts;</span>' + handHtml(p.south) + '</span><span class="seat">South</span></div>'
+      + (a ? '<div class="ns-known">North-South hold ' + (13 - a.L - a.P) + ' <span class="s">&spades;</span></div>' : '')
+      + '</div>';
+    h += '<div class="goal"><b>Make ' + p.t + ' tricks</b><small>Missing: ' + missing(p) + '</small></div>';
+    h += '<div class="choices" id="choices">';
+    order.forEach((li, pos) => {
+      const ln = p.lines[li];
+      const steps = (ln.steps || []).map(s => '<li>' + esc(s.when) + ', ' + esc(s.do) + '.</li>').join('');
+      h += '<button type="button" class="choice" data-li="' + li + '"><span class="key">' + (pos + 1) + '</span><span class="head">' + esc(ln.en) + '<span class="badge"></span></span><span class="pct"></span>' + (steps ? '<ul class="steps">' + steps + '</ul>' : '') + '</button>';
+    });
+    h += '</div><div id="after"></div>';
+    $('main').innerHTML = h;
+    $('choices').querySelectorAll('.choice').forEach(b => b.onclick = () => pick(+b.dataset.li));
+    const prev = picks[p.id];
+    if (prev && state.seen.has('played') && !state.seen.has('new')) {} // replays are scored afresh
+  }
+
+  function pick(li) {
+    if (answered || !current) return;
+    answered = true;
+    const p = current, ln = p.lines[li];
+    // the gap between the shown (1 dp) numbers, as on the review page
+    const lost = isBest(p, ln) ? 0 : Math.max(0, +(+p.best.toFixed(1) - +ln.pct.toFixed(1)).toFixed(1));
+    seq += 1;
+    picks[p.id] = { i: li, lost, at: new Date().toISOString().slice(0, 10), seq };
+    save();
+    $('choices').querySelectorAll('.choice').forEach(b => {
+      const L = p.lines[+b.dataset.li];
+      b.disabled = true;
+      b.querySelector('.pct').textContent = L.pct.toFixed(1) + '%';
+      const best = isBest(p, L), mine = +b.dataset.li === li;
+      if (best) b.classList.add('best');
+      if (mine) b.classList.add('mine');
+      b.querySelector('.badge').textContent = mine && best ? 'Your pick, best' : mine ? 'Your pick' : best ? 'Best' : '';
+    });
+    const good = lost <= 1e-9;
+    let v = '<div class="verdict"><div class="big ' + (good ? 'good' : 'bad') + '">' + (good ? 'Best line' : lost.toFixed(1) + ' pp below the best') + '</div>';
+    if (p.n_best > 1) v += '<p>' + p.n_best + ' lines tie for best here; any of them counts.</p>';
+    const a = p.auction;
+    if (a) {
+      v += '<p>Without the auction (13 unknown cards each) the best line for ' + a.plain_t + ' tricks is: ' + esc(a.plain_en) + '. ' + (a.changes ? 'The auction changes the answer.' : 'The auction does not change the answer.') + '</p>';
+    }
+    v += '</div><div class="cmp" id="cmp"></div><div class="verdict">';
+    v += '<div class="actions"><button type="button" class="btn" id="nextbtn">Next problem</button><button type="button" class="btn ghost" id="flagbtn">' + (flags[p.id] ? 'Edit note' : 'Flag this problem') + '</button></div>';
+    v += '<div class="flagbox" id="flagbox" hidden><label for="flagtext" class="note">What is wrong or worth noting (saved with your progress)</label><textarea id="flagtext">' + esc(flags[p.id] || '') + '</textarea><div class="actions"><button type="button" class="btn ghost" id="flagsave">Save note</button></div></div></div>';
+    $('after').innerHTML = v;
+    cmp = defaultCmp(p, li);
+    renderCmp();
+    $('nextbtn').onclick = next;
+    $('flagbtn').onclick = () => { $('flagbox').hidden = false; $('flagtext').focus(); };
+    $('flagsave').onclick = () => { const t = $('flagtext').value.trim(); if (t) flags[p.id] = t; else delete flags[p.id]; save(); $('flagbtn').textContent = t ? 'Edit note' : 'Flag this problem'; $('flagbox').hidden = true; };
+    $('nextbtn').focus();
+    stats(); refreshCount();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('textarea, input')) return;
+    if (!current) return;
+    if (!answered && /^[1-4]$/.test(e.key)) { const li = order[+e.key - 1]; if (li !== undefined) pick(li); }
+    else if (answered && (e.key === 'n' || e.key === 'N' || e.key === 'Enter')) { if (e.key === 'Enter' && e.target.tagName === 'BUTTON') return; next(); }
+  });
+
+  async function connect() {
+    try {
+      if (!window.claude || !window.claude.use) return;
+      const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+      if (!db || !user) return;
+      const uid = await user.id();
+      if (!uid) return;
+      const ref = db.doc('plays/' + uid);
+      const snap = await Promise.race([ref.get(), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000))]);
+      if (snap.exists) {
+        const remote = snap.data();
+        const local = body();
+        if ((remote.seq || 0) >= (local.seq || 0)) load(JSON.parse(JSON.stringify(remote)));
+      }
+      store = { save: b => ref.set(b) };
+      if (!snap.exists && Object.keys(picks).length) save();
+      $('savenote').textContent = 'One suit, no trumps, no ruffs, unlimited entries, best defence. Percentages from two independent solvers that agree exactly. Progress is saved to your account.';
+      stats(); refreshCount();
+      if (!answered && current && !matches(current)) next();
+    } catch (e) { /* stay local */ }
+  }
+
+  async function init() {
+    readFilters();
+    load(readLocal());
+    try {
+      const r = await fetch('game.json');
+      ALL = await r.json();
+    } catch (e) { $('main').innerHTML = '<div class="empty">The problem file did not load. Reload the page to try again.</div>'; return; }
+    ALL.forEach(p => { p.south = p.south.replace(/10/g, 'T'); p.north = p.north.replace(/10/g, 'T'); });   // one character per card
+    BYID = new Map(ALL.map(p => [p.id, p]));
+    fetch('layouts.json').then(r => r.ok ? r.json() : null).then(j => { LAY = j; }, () => { LAY = null; }).then(() => { if (answered) renderCmp(); });
+    const ks = [...new Set(ALL.map(p => p.k))].sort((a, b) => a - b).map(k => [String(k), k + ' cards']);
+    chipRow($('f-k'), ks, 'k'); chipRow($('f-kind'), KINDS, 'kind'); chipRow($('f-band'), BANDS, 'band'); chipRow($('f-seen'), SEEN, 'seen');
+    $('f-go').onsubmit = e => {
+      e.preventDefault();
+      let id = $('f-id').value.trim().toLowerCase();
+      if (/^\d+$/.test(id)) id = 'g' + id.padStart(4, '0');
+      const q = BYID.get(id);
+      $('f-gomsg').textContent = q ? '' : 'No problem ' + id;
+      if (q) { current = q; order = shuffle(q.lines.length); answered = false; render(); }
+    };
+    stats(); refreshCount(); next();
+    connect();
+  }
+  init();
+})();
+</script>
+
+</body></html>
