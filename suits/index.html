@@ -150,6 +150,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
       <div class="stat"><b id="st-played">0</b><span>Played</span></div>
       <div class="stat"><b id="st-best">-</b><span>Best line found</span></div>
       <div class="stat"><b id="st-lost">-</b><span>Avg pp lost</span></div>
+      <div class="stat"><b id="st-tlost">-</b><span>Avg tricks lost</span></div>
       <div class="stat"><b id="st-streak">0</b><span>Streak</span></div>
     </div>
   </header>
@@ -158,6 +159,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     <summary>Choose problems <span class="count" id="f-count"></span></summary>
     <div class="frows">
       <div class="frow"><span class="flabel">Cards</span><div id="f-k" class="frow"></div></div>
+      <div class="frow"><span class="flabel">Goal</span><div id="f-goal" class="frow"></div></div>
       <div class="frow"><span class="flabel">Kind</span><div id="f-kind" class="frow"></div></div>
       <div class="frow"><span class="flabel">Margin</span><div id="f-band" class="frow"></div></div>
       <div class="frow"><span class="flabel">Show</span><div id="f-seen" class="frow"></div></div>
@@ -177,6 +179,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   const RANKS = 'AKQJT98765432';
   const BANDS = [['clear', 'Clear'], ['medium', 'Medium'], ['close', 'Close'], ['near-tie', 'Near tie']];
   const KINDS = [['plain', 'Plain'], ['auction', 'Auction']];
+  const GOALS = [['most', 'Most tricks'], ['target', 'Make t tricks']];
   const SEEN = [['new', 'Not played'], ['played', 'Played'], ['missed', 'Missed']];
   let ALL = [], BYID = new Map();
   let picks = {};       // id -> {i: original line index, lost, at, seq}
@@ -184,14 +187,17 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   let seq = 0;
   let store = null;     // {save(body)} for the db doc, or null for local only
   let current = null, order = null, answered = false;
-  const state = { k: new Set(), kind: new Set(), band: new Set(), seen: new Set(['new']) };
+  const state = { k: new Set(), goal: new Set(), kind: new Set(), band: new Set(), seen: new Set(['new']) };
 
   const card = r => r === 'T' ? '10' : r;
   const handHtml = h => h.split('').map(card).join(' ');
   const cardsHtml = h => '<span class="hand" role="img" aria-label="' + h.split('').map(card).join(' ') + ' of hearts">' + h.split('').map(r => '<span class="pc"><b>' + card(r) + '</b><i>&hearts;</i></span>').join('') + '</span>';
   const suitify = s => s.replace(/\b([1-7])([CDHS])\b/g, (m, n, x) => n + ({ C: '<span class="s">&clubs;</span>', D: '<span class="red">&diams;</span>', H: '<span class="red">&hearts;</span>', S: '<span class="s">&spades;</span>' })[x]);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-  const isBest = (p, ln) => ln.pct >= p.best - 1e-9;
+  const isMost = p => p.goal === 'most';
+  const val = (p, ln) => isMost(p) ? ln.avg : ln.pct;
+  const isBest = (p, ln) => val(p, ln) >= p.best - 1e-9;
+  const shownVal = (p, x) => isMost(p) ? x.toFixed(2) + ' tricks' : x.toFixed(1) + '%';
 
   function readLocal() { try { return JSON.parse(localStorage.getItem('scc-progress') || 'null'); } catch (e) { return null; } }
   function writeLocal(body) { try { localStorage.setItem('scc-progress', JSON.stringify(body)); } catch (e) {} }
@@ -222,6 +228,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   function matches(p) {
     if (p.part === 2) return false;
     if (state.k.size && !state.k.has(String(p.k))) return false;
+    if (state.goal.size && !state.goal.has(p.goal || 'target')) return false;
     if (state.kind.size && !state.kind.has(p.kind)) return false;
     if (state.band.size && !state.band.has(p.band)) return false;
     if (state.seen.size) { const s = seenOf(p); if (!(state.seen.has(s) || (s === 'missed' && state.seen.has('played')))) return false; }
@@ -232,10 +239,12 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   function stats() {
     const xs = Object.values(picks);
     $('st-played').textContent = xs.length.toLocaleString();
-    if (!xs.length) { $('st-best').textContent = '-'; $('st-lost').textContent = '-'; $('st-streak').textContent = '0'; return; }
+    if (!xs.length) { $('st-best').textContent = '-'; $('st-lost').textContent = '-'; $('st-tlost').textContent = '-'; $('st-streak').textContent = '0'; return; }
     const good = xs.filter(x => x.lost <= 1e-9).length;
     $('st-best').textContent = Math.round(100 * good / xs.length) + '%';
-    $('st-lost').textContent = (xs.reduce((a, x) => a + x.lost, 0) / xs.length).toFixed(1);
+    const tg = xs.filter(x => x.g !== 'most'), mo = xs.filter(x => x.g === 'most');
+    $('st-lost').textContent = tg.length ? (tg.reduce((a, x) => a + x.lost, 0) / tg.length).toFixed(1) : '-';
+    $('st-tlost').textContent = mo.length ? (mo.reduce((a, x) => a + x.lost, 0) / mo.length).toFixed(2) : '-';
     const bySeq = xs.slice().sort((a, b) => b.seq - a.seq);
     let s = 0; for (const x of bySeq) { if (x.lost > 1e-9) break; s++; }
     $('st-streak').textContent = s;
@@ -244,8 +253,8 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     rec.hidden = !last.length;
     rec.innerHTML = '<h2>Recent</h2>' + last.map(([id, x]) => {
       const p = BYID.get(id); if (!p) return '';
-      const l = x.lost <= 1e-9 ? '<span class="ok">best</span>' : '<span class="miss">-' + x.lost.toFixed(1) + ' pp</span>';
-      return '<div class="rrow"><span>' + handHtml(p.north) + ' / ' + handHtml(p.south) + ', ' + p.t + ' tricks' + (p.kind === 'auction' ? ', auction' : '') + '</span>' + l + '</div>';
+      const l = x.lost <= 1e-9 ? '<span class="ok">best</span>' : '<span class="miss">-' + (isMost(p) ? x.lost.toFixed(2) + ' tricks' : x.lost.toFixed(1) + ' pp') + '</span>';
+      return '<div class="rrow"><span>' + handHtml(p.north) + ' / ' + handHtml(p.south) + ', ' + (isMost(p) ? 'most tricks' : p.t + ' tricks') + (p.kind === 'auction' ? ', auction' : '') + '</span>' + l + '</div>';
     }).join('');
   }
 
@@ -280,7 +289,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     if (b === a) {
       const rest = all.filter(i => i !== a);
       const below = rest.filter(i => !isBest(p, p.lines[i]));
-      b = (below.length ? below : rest).sort((x, y) => p.lines[y].pct - p.lines[x].pct || posOf(x) - posOf(y))[0];
+      b = (below.length ? below : rest).sort((x, y) => val(p, p.lines[y]) - val(p, p.lines[x]) || posOf(x) - posOf(y))[0];
     }
     return { a, b };
   }
@@ -294,7 +303,8 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     if (!d) { el.innerHTML = ''; el.hidden = true; return; }
     el.hidden = false;
     const n = d.L.length, D = d.D;
-    const A = bitsOf(d.m[cmp.a], n), B = bitsOf(d.m[cmp.b], n);
+    const most = isMost(p) && d.tr;
+    const A = most ? d.tr[cmp.a].split('').map(Number) : bitsOf(d.m[cmp.a], n), B = most ? d.tr[cmp.b].split('').map(Number) : bitsOf(d.m[cmp.b], n);
     const mine = picks[p.id] ? picks[p.id].i : -1;
     const name = i => 'line ' + posOf(i) + (i === mine ? ' (yours)' : isBest(p, p.lines[i]) ? ' (best)' : '');
     const pc = w => 100 * w / D;
@@ -319,9 +329,9 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     const merged = new Map();
     d.L.forEach((L, i) => {
       if (A[i] === B[i]) return;
-      const c = A[i] ? 'a' : 'b', west = showHand(L[0]), east = showHand(L[1]), key = c + '|' + west + '|' + east;
+      const c = A[i] > B[i] ? 'a' : 'b', by = Math.abs(A[i] - B[i]), west = showHand(L[0]), east = showHand(L[1]), key = c + '|' + by + '|' + west + '|' + east;
       const m = merged.get(key);
-      if (m) m.w += L[2]; else merged.set(key, { c, west, east, w: L[2] });
+      if (m) m.w += L[2]; else merged.set(key, { c, by, west, east, w: L[2] });
     });
     const rows = [...merged.values()];
     const colMax = Math.max(1, ...rows.map(m => m.w));
@@ -329,15 +339,21 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     const col = (c, who) => {
       const xs = rows.filter(m => m.c === c).sort((x, y) => y.w - x.w);
       const tot = xs.reduce((t, m) => t + m.w, 0);
-      let h = '<div class="dcol ' + c + '"><h4>Only ' + esc(who) + ' wins<span>' + f1(pc(tot)) + '%</span></h4>';
+      let h = '<div class="dcol ' + c + '"><h4>' + (most ? esc(cap(who)) + ' takes more' : 'Only ' + esc(who) + ' wins') + '<span>' + f1(pc(tot)) + '%</span></h4>';
       if (!xs.length) return h + '<div class="none">Never.</div></div>';
-      h += xs.slice(0, SHOW).map(m => '<div class="lrow"><span class="who"><small>West</small><span>' + esc(m.west) + '</span><small>East</small>' + esc(m.east) + '</span><span class="pp">' + pc(m.w).toFixed(1) + '%</span><span class="mini k-' + c + '" style="width:' + (100 * m.w / colMax).toFixed(1) + '%"></span></div>').join('');
+      h += xs.slice(0, SHOW).map(m => '<div class="lrow"><span class="who"><small>West</small><span>' + esc(m.west) + '</span><small>East</small>' + esc(m.east) + '</span><span class="pp">' + (m.by > 1 ? '+' + m.by + ' tricks, ' : '') + pc(m.w).toFixed(1) + '%</span><span class="mini k-' + c + '" style="width:' + (100 * m.w / colMax).toFixed(1) + '%"></span></div>').join('');
       if (xs.length > SHOW) { const rest = xs.slice(SHOW); h += '<div class="more">and ' + rest.length + ' more, ' + f1(pc(rest.reduce((t, m) => t + m.w, 0))) + '%</div>'; }
       return h + '</div>';
     };
     const na = name(cmp.a), nb = name(cmp.b);
-    let h = '<p>' + esc(cap(na)) + ' makes ' + p.t + ' tricks ' + f1(p.lines[cmp.a].pct) + '% of the time, ' + esc(nb) + ' ' + f1(p.lines[cmp.b].pct) + '%. Where they differ:</p>';
+    let h = most
+      ? '<p>' + esc(cap(na)) + ' averages ' + p.lines[cmp.a].avg.toFixed(2) + ' tricks, ' + esc(nb) + ' ' + p.lines[cmp.b].avg.toFixed(2) + '. Where they differ:</p>'
+      : '<p>' + esc(cap(na)) + ' makes ' + p.t + ' tricks ' + f1(p.lines[cmp.a].pct) + '% of the time, ' + esc(nb) + ' ' + f1(p.lines[cmp.b].pct) + '%. Where they differ:</p>';
     h += '<div class="diffs">' + col('a', na) + col('b', nb) + '</div>';
+    if (most) {
+      const dist = i => { const ds = p.lines[i].dist || {}; return Object.keys(ds).map(Number).sort((x, y) => y - x).filter(k => ds[k] > 0).map(k => k + ' tricks ' + (+ds[k]).toFixed(1) + '%').join(', '); };
+      h += '<p class="note">' + esc(cap(na)) + ': ' + dist(cmp.a) + '.<br>' + esc(cap(nb)) + ': ' + dist(cmp.b) + '.</p>';
+    }
     const shown = rows.map(m => m.west + ' ' + m.east).join(' ');
     const notes = [];
     if (lowRun.length > 1 && shown.split(' ').includes('x')) notes.push('x is any of the ' + lowRun.map(card).join(' '));
@@ -370,7 +386,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
       + (a ? '<div class="ns-known">North-South hold ' + (13 - a.L - a.P) + ' <span class="s">&spades;</span></div>' : '')
       + '</div>';
     const partNote = p.part === 2 ? 'Part 2 of 2, same hand. ' : p.next ? 'Part 1 of 2. ' : '';
-    h += '<div class="goal"><b>Make ' + p.t + ' tricks</b><small>' + partNote + 'Missing: ' + missing(p) + '</small></div>';
+    h += '<div class="goal"><b>' + (isMost(p) ? 'Make as many tricks as you can' : 'Make ' + p.t + ' tricks') + '</b><small>' + partNote + 'Missing: ' + missing(p) + '</small></div>';
     h += '<div class="choices" id="choices">';
     order.forEach((li, pos) => {
       const ln = p.lines[li];
@@ -389,21 +405,22 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     answered = true;
     const p = current, ln = p.lines[li];
     // the gap between the shown (1 dp) numbers, as on the review page
-    const lost = isBest(p, ln) ? 0 : Math.max(0, +(+p.best.toFixed(1) - +ln.pct.toFixed(1)).toFixed(1));
+    const dp = isMost(p) ? 2 : 1;
+    const lost = isBest(p, ln) ? 0 : Math.max(0, +(+p.best.toFixed(dp) - +val(p, ln).toFixed(dp)).toFixed(dp));
     seq += 1;
-    picks[p.id] = { i: li, lost, at: new Date().toISOString().slice(0, 10), seq };
+    picks[p.id] = { i: li, lost, at: new Date().toISOString().slice(0, 10), seq, g: isMost(p) ? 'most' : 'target' };
     save();
     $('choices').querySelectorAll('.choice').forEach(b => {
       const L = p.lines[+b.dataset.li];
       b.disabled = true;
-      b.querySelector('.pct').textContent = L.pct.toFixed(1) + '%';
+      b.querySelector('.pct').textContent = shownVal(p, val(p, L));
       const best = isBest(p, L), mine = +b.dataset.li === li;
       if (best) b.classList.add('best');
       if (mine) b.classList.add('mine');
       b.querySelector('.badge').textContent = mine && best ? 'Your pick, best' : mine ? 'Your pick' : best ? 'Best' : '';
     });
     const good = lost <= 1e-9;
-    let v = '<div class="verdict"><div class="big ' + (good ? 'good' : 'bad') + '">' + (good ? 'Best line' : lost.toFixed(1) + ' pp below the best') + '</div>';
+    let v = '<div class="verdict"><div class="big ' + (good ? 'good' : 'bad') + '">' + (good ? 'Best line' : isMost(p) ? lost.toFixed(2) + ' tricks a deal below the best' : lost.toFixed(1) + ' pp below the best') + '</div>';
     if (p.n_best > 1) v += '<p>' + p.n_best + ' lines tie for best here; any of them counts.</p>';
     const a = p.auction;
     if (a) {
@@ -462,7 +479,7 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     BYID = new Map(ALL.map(p => [p.id, p]));
     fetch('layouts.json').then(r => r.ok ? r.json() : null).then(j => { LAY = j; }, () => { LAY = null; }).then(() => { if (answered) renderCmp(); });
     const ks = [...new Set(ALL.map(p => p.k))].sort((a, b) => a - b).map(k => [String(k), k + ' cards']);
-    chipRow($('f-k'), ks, 'k'); chipRow($('f-kind'), KINDS, 'kind'); chipRow($('f-band'), BANDS, 'band'); chipRow($('f-seen'), SEEN, 'seen');
+    chipRow($('f-k'), ks, 'k'); chipRow($('f-goal'), GOALS, 'goal'); chipRow($('f-kind'), KINDS, 'kind'); chipRow($('f-band'), BANDS, 'band'); chipRow($('f-seen'), SEEN, 'seen');
     $('f-go').onsubmit = e => {
       e.preventDefault();
       let id = $('f-id').value.trim().toLowerCase();
