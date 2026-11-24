@@ -1,5 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
-<title>Suit Combination Challenge</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><title>Suit Combination Challenge</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -421,7 +420,8 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
     });
     const good = lost <= 1e-9;
     let v = '<div class="verdict"><div class="big ' + (good ? 'good' : 'bad') + '">' + (good ? 'Best line' : isMost(p) ? lost.toFixed(2) + ' tricks a deal below the best' : lost.toFixed(1) + ' pp below the best') + '</div>';
-    if (p.n_best > 1) v += '<p>' + p.n_best + ' lines tie for best here; any of them counts.</p>';
+    const sb = p.lines.filter(l => isBest(p, l)).length, nb = Math.max(p.n_best || 1, sb);
+    if (nb > 1) v += '<p>' + (sb > 1 ? sb + ' lines shown tie for best; either counts.' : '') + (nb > sb ? (sb > 1 ? ' ' : '') + (nb - sb) + ' other line' + (nb - sb > 1 ? 's' : '') + ' (not shown) do' + (nb - sb > 1 ? '' : 'es') + ' as well.' : '') + '</p>';
     const a = p.auction;
     if (a) {
       v += '<p>Without the auction (13 unknown cards each) the best line for ' + a.plain_t + ' tricks is: ' + esc(a.plain_en) + '. ' + (a.changes ? 'The auction changes the answer.' : 'The auction does not change the answer.') + '</p>';
@@ -494,5 +494,4 @@ button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2
   init();
 })();
 </script>
-
 </body></html>
