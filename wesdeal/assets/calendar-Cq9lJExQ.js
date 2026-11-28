@@ -1,0 +1,1 @@
+import"./modulepreload-polyfill-B5Qt9EMX.js";import{m as t,h as a}from"./nav-DJY07QyR.js";import{r}from"./calendarView-CXvnhhRV.js";function s(){const e=document.getElementById("app");e.classList.add("cal-app");const{nodes:n,summary:p}=r();t("calendar"),e.append(a("header",{class:"app-header"},[a("h1",{},["Tournament Data Map"]),a("p",{class:"tagline"},[p])]),...n)}s();
