@@ -1,6 +1,6 @@
-import{h as t,s as O}from"./nav-BvycMMDv.js";import{r as M}from"./calendarView-bfuiZI33.js";function S(o){const a=[],e=/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;let n=0;for(const h of o.matchAll(e)){h.index>n&&a.push({t:"text",s:o.slice(n,h.index)});const r=h[0];if(r.startsWith("**"))a.push({t:"bold",s:r.slice(2,-2)});else if(r.startsWith("`"))a.push({t:"code",s:r.slice(1,-1)});else{const p=/^\[([^\]]+)\]\(([^)]+)\)$/.exec(r);a.push({t:"link",s:p[1],href:p[2]})}n=h.index+r.length}return n<o.length&&a.push({t:"text",s:o.slice(n)}),a}function k(o){return o.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(e=>e.trim())}function L(o){return/^\|?[\s:|-]+\|?$/.test(o.trim())&&o.includes("-")}function R(o){const a=[],e=o.split(`
-`);let n=0;for(;n<e.length;){const h=e[n],r=h.trim();if(r===""){n++;continue}if(h.startsWith("# ")){a.push({t:"h1",text:h.slice(2).trim()}),n++;continue}if(h.startsWith("## ")){a.push({t:"h2",text:h.slice(3).trim()}),n++;continue}if(h.startsWith("### ")){a.push({t:"h3",text:h.slice(4).trim()}),n++;continue}if(r.startsWith("```")){const s=[];for(n++;n<e.length&&!e[n].trim().startsWith("```");)s.push(e[n]),n++;n++,a.push({t:"code",text:s.join(`
-`)});continue}if(r.startsWith("|")){const s=k(h).map(S);n++,n<e.length&&L(e[n])&&n++;const i=[];for(;n<e.length&&e[n].trim().startsWith("|");)i.push(k(e[n]).map(S)),n++;a.push({t:"table",header:s,rows:i});continue}if(h.startsWith("- ")){const s=[h.slice(2)];for(n++;n<e.length;){const i=e[n];if(i.startsWith("- "))s.push(i.slice(2)),n++;else if(/^\s{2,}\S/.test(i))s[s.length-1]+=" "+i.trim(),n++;else break}a.push({t:"ul",items:s.map(S)});continue}const p=[r];for(n++;n<e.length;){const s=e[n],i=s.trim();if(i===""||s.startsWith("#")||s.startsWith("- ")||i.startsWith("|")||i.startsWith("```"))break;p.push(i),n++}a.push({t:"p",inline:S(p.join(" "))})}return a}function j(o){return o.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}const Q=/^(<(\d+)|(\d+)\+|(\d+)):(\d+)%$/;function K(o){const a=o.trim().split(/\s+/);if(a.length<2)return null;const e=[],n=[];for(const h of a){const r=Q.exec(h);if(!r){if(e.length>0)return null;n.push(h);continue}const p=Number(r[5]);r[2]!==void 0?e.push({label:`<${r[2]}`,anchor:Number(r[2])-1,pct:p}):r[3]!==void 0?e.push({label:`${r[3]}+`,anchor:Number(r[3]),pct:p}):e.push({label:r[4],anchor:Number(r[4]),pct:p})}return e.length<2?null:{prefix:n.join(" "),tokens:e}}const E=`# What championship players actually hold for every bid
+import{h as t,m as K}from"./nav-CcqXqrL0.js";import{r as W}from"./calendarView-BaziAG9K.js";function P(a){const i=[],e=/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;let n=0;for(const d of a.matchAll(e)){d.index>n&&i.push({t:"text",s:a.slice(n,d.index)});const h=d[0];if(h.startsWith("**"))i.push({t:"bold",s:h.slice(2,-2)});else if(h.startsWith("`"))i.push({t:"code",s:h.slice(1,-1)});else{const u=/^\[([^\]]+)\]\(([^)]+)\)$/.exec(h);i.push({t:"link",s:u[1],href:u[2]})}n=d.index+h.length}return n<a.length&&i.push({t:"text",s:a.slice(n)}),i}function O(a){return a.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(e=>e.trim())}function $(a){return/^\|?[\s:|-]+\|?$/.test(a.trim())&&a.includes("-")}function I(a){const i=[],e=a.split(`
+`);let n=0;for(;n<e.length;){const d=e[n],h=d.trim();if(h===""){n++;continue}if(d.startsWith("# ")){i.push({t:"h1",text:d.slice(2).trim()}),n++;continue}if(d.startsWith("## ")){i.push({t:"h2",text:d.slice(3).trim()}),n++;continue}if(d.startsWith("### ")){i.push({t:"h3",text:d.slice(4).trim()}),n++;continue}if(h.startsWith("```")){const l=[];for(n++;n<e.length&&!e[n].trim().startsWith("```");)l.push(e[n]),n++;n++,i.push({t:"code",text:l.join(`
+`)});continue}if(h.startsWith("|")){const l=O(d).map(P);n++,n<e.length&&$(e[n])&&n++;const s=[];for(;n<e.length&&e[n].trim().startsWith("|");)s.push(O(e[n]).map(P)),n++;i.push({t:"table",header:l,rows:s});continue}if(d.startsWith("- ")){const l=[d.slice(2)];for(n++;n<e.length;){const s=e[n];if(s.startsWith("- "))l.push(s.slice(2)),n++;else if(/^\s{2,}\S/.test(s))l[l.length-1]+=" "+s.trim(),n++;else break}i.push({t:"ul",items:l.map(P)});continue}const u=[h];for(n++;n<e.length;){const l=e[n],s=l.trim();if(s===""||l.startsWith("#")||l.startsWith("- ")||s.startsWith("|")||s.startsWith("```"))break;u.push(s),n++}i.push({t:"p",inline:P(u.join(" "))})}return i}function R(a){return a.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}const U=/^(<(\d+)|(\d+)\+|(\d+)):(\d+)%$/;function G(a){const i=a.trim().split(/\s+/);if(i.length<2)return null;const e=[],n=[];for(const d of i){const h=U.exec(d);if(!h){if(e.length>0)return null;n.push(d);continue}const u=Number(h[5]);h[2]!==void 0?e.push({label:`<${h[2]}`,anchor:Number(h[2])-1,pct:u}):h[3]!==void 0?e.push({label:`${h[3]}+`,anchor:Number(h[3]),pct:u}):e.push({label:h[4],anchor:Number(h[4]),pct:u})}return e.length<2?null:{prefix:n.join(" "),tokens:e}}const J=`# What championship players actually hold for every bid
 
 Empirical hand ranges for every call — opening, overcall, double, response through
 the four level — from every auction in recent World, European and US team
@@ -209,51 +209,67 @@ meaning is inferred from the hands themselves (see system detection).
 
 ## Key findings
 
-- **The field opens light and overcalls light.** Natural 1M openings in seats 1–2
-  centre on 13 HCP with p5 = 10 — nearly every 11-count and many decent
-  10-counts get opened. One-level overcalls ((1C) 1H) run 7–16 (med 11) HCP —
-  the book "8–16" is real but the median sits 2 HCP below the median opening.
-- **Suit quality is a weak-hand requirement.** Light (≤10 HCP) 1H overcalls of a
-  natural 1C carry a median suit texture of 4.2/10; sound ones (11+) get away
-  with 5.1/10 — the values carry a moderate suit. The derived filters
-  encode exactly that: a quality floor everyone meets, plus a higher bar that
-  only applies below 11 HCP (\`hcp >= 11 or top(h,5) >= …\`).
-- **Takeout doubles are opening-strength, not 12+**: (1S) X runs 11–19 (med 14);
-  the light tail (10–11) comes with shape.
-- **The 1NT overcall is a strong NT**: (1H) 1NT = 14–17 (med 15); balancing
-  (1H) P (P) 1NT is 4 HCP lighter at 10–16 (med 11).
-- **Vulnerability moves preempts, not constructive bids.** Weak jump overcalls
-  swing hardest: (1C) 2H is median 7 at favourable but 10 at unfavourable.
-  Simple overcalls and doubles barely move (±1 HCP).
-- **Two-suited bids are universal**: (1H) 2H (Michaels) = 8–15 (med 12) with ≤2
-  hearts 99% of the time; (1M) 2NT is the two lowest suits, unbalanced.
-- **Negative doubles start at ~7**: 1S (2H) X = 7–15 (med 10). Redouble after
-  1C (X) shows 6–16 (med 11).
-- **Transfer responses to 1C are mainstream**: of classified natural-club pairs,
-  185 play transfers vs 437 standard. Their 1C (P) 1D holds 4+ hearts 96%
-  of the time (4–16 (med 9) HCP), and 1S is the no-major hand (77% with no 4-card major, 5–17 (med 10)) — the
-  derived rules follow the shown suit, and the treatment carries on over a
-  double or 1D overcall (see the transfer-responder sections).
-- **Defence to 1NT is conventional and the data shows it**: (1NT) 2C holds both
-  majors 4+ 87% of the time (clubs are incidental); (1NT) 2D has a 5+
-  major 92% (6+ 81%) — multi-style; 2M shows the major plus a 4+ minor.
-  The derived rules detect these shapes instead of reading the bid suit at
-  face value (see the (1NT) ? section).
-- **At this level 2D is multi** (309 pairs multi vs 64 weak among classified),
-  2C strong is standard, and strong-club pairs are 9% of the field (207 of 2254).
-- **Shortage in their suit buys lighter action.** (1D) 1S overcallers with ≤2
-  diamonds are median 10 HCP (p5 7); with 3+ diamonds median 11 (p5 7).
-  The same gradient shows up in every overcall and double context (see the
-  per-context cross-tabs), so the derived filters split their-suit shortage
-  from length.
-- **Doubles are support-first below 17, shape-free above.** Under 17 HCP, (1H) X
-  holds 3+ spades 100% of the time (4+ 72%) and 2+ in both
-  minors 98%; (1C) X holds both majors 3+ 95%. At 17+ those rates
-  drop to 75% / 65% — the strong double is its own animal, and the derived
-  filters carry it as a separate shape-free branch.
-- **Action rates need a fixed-strength lens** (a strong 1C depletes the seats
-  behind it). Holding 9–11 HCP, the direct seat acts 57% over a natural 1C, 53% over 1D, 48% over a strong 1C.
-  See the action-rate section for the full grid.
+All ranges are the field’s p5–**med**–p95. “Lighter” and “heavier” below mean
+relative to the SAYC / 2-over-1 teaching ranges laid out in the Book-vs-field table —
+never in the abstract: a world-class median is a reference point, not evidence of
+shading. Findings are ordered by how much they add beyond what a convention card
+already tells you.
+
+**Non-obvious — the numbers you can’t read off a system card:**
+
+- **Vulnerability moves preempts, and little else.** It is the single cleanest axis
+  in the data: (1C) 2H (weak jump overcall) is median 7 at favourable, 10 at
+  unfavourable, while simple overcalls and takeout doubles barely move (±1 HCP).
+- **The passed-hand cap bites at the top of the range, not the middle.** A responder
+  who already passed keeps almost the same median but loses the ceiling: 1C (P) 1H is
+  5–11 (med 9) for a passed hand vs 5–16 (med 10) live — a 5-HCP fall at p95. The same
+  compression (median ~1 lower, p95 4–6 lower) runs across the busy responses; see the
+  passed-hand responses section.
+- **Shortage in their suit is not a licence to bid on fewer points — it travels with shape.**
+  (1D) 1S overcallers with ≤2 diamonds are median 10 (p5 7); with 3+ they are median
+  11 (p5 7). The gap is small in HCP because the driver is total playing strength — the
+  short hand brings compensating length, not thinner values — so the filters split
+  their-suit shortage from length rather than lowering the point floor.
+- **Suit quality is a weak-hand requirement, and only a weak-hand requirement.** Light
+  (≤10 HCP) 1H overcalls of a natural 1C carry median texture 4.2/10; sound ones (11+)
+  ease to 5.1/10. The derived filters bind the quality bar only below 11 HCP
+  (\`hcp >= 11 or top(h,5) >= …\`) — above that, values alone carry the bid.
+- **Action rates only mean something at fixed own strength.** A strong 1C depletes the
+  seats behind it, so raw rates mislead; holding 9–11 HCP the direct seat acts
+  57% over a natural 1C, 53% over 1D, 48% over a strong 1C. See the action-rate section for the full grid.
+
+**Field composition — what you are up against (frequencies, not universal law):**
+
+- **Strong-club pairs are 9% of the classified field** (207 of 2254); most 1C you
+  meet is natural or short. Among classified 2♦ openers, 309 play multi vs 64 natural-weak,
+  so at this level a 2♦ opening is more often multi than a plain weak two — a fact about
+  this field, not a rule of bridge.
+- **Transfer responses to 1C are a large minority**: 185 of the classified natural-club
+  pairs play them vs 437 standard. Their 1D shows hearts (4+ 96% of the time, 4–16 (med 9)),
+  so the derived rules follow the suit shown, not the suit bid.
+- **Defence to 1NT is conventional, and the hands show it without the alert card**: (1NT) 2C
+  holds both majors 4+ 87% of the time; (1NT) 2D has a 5+ major
+  92% (6+ 81%), multi-style. The rules read the shape, not the named suit.
+
+**Calibration against the book — where the field sits on the teaching range (mostly confirmations):**
+
+- **Openings sit about 2 HCP below the book at the floor, not across the board.** Natural
+  1M in seats 1–2 is p5 10 / med 13 against a 12–21 teaching range: the bottom is
+  shaded (most 11-counts, some good 10s), but the median is just the centre of an 11+ opening.
+- **One-level overcalls run 7–16 (med 11)** — the book “8–16” holds, with the median 2 below the
+  median opening.
+- **The 1NT overcall is a strong NT** (14–17 (med 15)); the balancing (1H) P (P) 1NT is 4 lighter (10–16 (med 11)).
+- **The takeout double over an opening is opening-strength, not a 12+ gate**: (1S) X runs 11–19 (med 14),
+  the 10–11 tail carrying shape. Distinct from it, the negative double (responder, over
+  interference) starts ~7: 1S (2H) X = 7–15 (med 10); redouble after 1C (X) shows 6–16 (med 11).
+- **The takeout double is shape-first below ~17 and shape-free above** — two animals under one
+  call. Under 17, (1H) X holds 3+ spades 100% and 2+ in both minors 98%;
+  (1C) X holds both majors 3+ 95%. At 17+ those shape rates fall to
+  75% / 65%, so the filters carry the big double as a separate branch. (This
+  is the takeout double — not the *support double* convention, which is a different call.)
+- **Two-suited overcalls keep their shape as the point count drifts**: (1H) 2H (Michaels) =
+  8–15 (med 12) with ≤2 hearts 99% of the time; the unusual 2NT is the two lowest suits. Shape
+  is the constant, points the variable.
 
 ## Partnership system census
 
@@ -1073,7 +1089,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 
 - \`X\` → \`((hcp in 11..17 and h <= 2 and s >= 3 and d >= 2 and c >= 2) or hcp >= 18)\`
 - \`3S\` → \`s >= 5 and top(s,5) >= 1 and hcp in 8..17\`
-- \`3NT\` → \`(has(h,a) or (has(h,k) and h >= 2) or (has(h,q) and h >= 3)) and hcp in 14..18\`
+- \`3NT\` → \`(hcp in 14..18 and d >= 6)\`
 
 ### (3S) ?
 
@@ -1874,7 +1890,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`X\` → \`hcp in 5..16\`
 - \`1NT\` → \`(has(s,a) or (has(s,k) and s >= 2) or (has(s,q) and s >= 3)) and hcp in 7..10\` *(+ balanced)*
 - \`2H\` → \`h >= 3 and top(h,5) >= 1 and ((hcp in 6..14 and s <= 2) or (hcp in 7..14 and s in 3..4))\`
-- \`2D\` → \`hcp in 6..14\`
+- \`2D\` → \`(hcp in 6..14 and h >= 6)\`
 - \`2C\` → \`hcp in 4..14\`
 - \`2S\` → \`((hcp in 8..16 and s >= 4) or (hcp in 8..16 and s <= 3 and h <= 3))\`
 
@@ -2229,7 +2245,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`4S\` → \`s >= 4 and top(s,5) >= 1 and hcp in 5..10\`
 - \`2H\` → \`h >= 5 and top(h,5) >= 1 and hcp in 5..13\`
 - \`3S\` → \`s >= 4 and top(s,5) >= 1 and hcp in 2..7\`
-- \`2NT\` → \`hcp in 7..13\`
+- \`2NT\` → \`(hcp in 7..13 and s >= 4 and h >= 4)\`
 
 ### 1H (2C) ?
 
@@ -2268,7 +2284,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`X\` → \`hcp in 6..13\`
 - \`2H\` → \`((hcp in 3..11 and h >= 4) or (hcp in 3..11 and s >= 4) or (hcp in 3..11 and s <= 3 and h <= 3))\`
 - \`3C\` → \`((hcp in 7..11 and h >= 4) or (hcp in 7..13 and s >= 4))\`
-- \`2NT\` → \`hcp in 7..13\`
+- \`2NT\` → \`(hcp in 7..13 and s >= 4 and h >= 4)\`
 - \`2S\` → \`s >= 5 and top(s,5) >= 1 and hcp in 6..14\`
 
 ### 1S (2C) ?
@@ -2483,7 +2499,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 
 - \`X\` → \`hcp in 5..14\`
 - \`1S\` → \`((hcp in 6..11 and h >= 4) or (hcp in 6..11 and s <= 3 and h <= 3))\`
-- \`2C\` → \`(hcp >= 11 or top(c,5) >= 1) and hcp in 6..15\`
+- \`2C\` → \`(hcp in 6..15 and d >= 6)\`
 
 ## Advancing partner’s direct action: (1x) act (…) ?
 
@@ -2558,7 +2574,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`2S\` → \`s >= 3 and top(s,5) >= 1 and hcp in 6..9\`
 - \`2C\` → \`hcp in 9..16\`
 - \`2H\` → \`h >= 4 and top(h,5) >= 1 and ((hcp in 6..12 and c <= 2) or (hcp in 7..12 and c in 3..4))\`
-- \`2D\` → \`hcp in 8..12\`
+- \`2D\` → \`(hcp in 8..12 and d >= 6)\`
 
 ### (1D) 1H (P) ?
 
@@ -2596,7 +2612,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`1S\` → \`s >= 4 and top(s,5) >= 1 and ((hcp in 5..14 and d <= 2) or (hcp in 7..14 and d in 3..4))\`
 - \`2D\` → \`hcp in 8..14\`
 - \`2H\` → \`h >= 3 and top(h,5) >= 1 and hcp in 6..10\`
-- \`1NT\` → \`hcp in 9..11\`
+- \`1NT\` → \`(hcp in 9..11 and d >= 6)\`
 - \`2C\` → \`c >= 5 and top(c,5) >= 2 and hcp in 7..14\`
 
 ### (1D) 1S (P) ?
@@ -2795,7 +2811,7 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`1S\` → \`s >= 4 and hcp in 0..9\`
 - \`1NT\` → \`hcp in 6..10\` *(+ balanced)*
 - \`2H\` → \`h >= 4 and top(h,5) >= 1 and hcp in 8..10\`
-- \`2D\` → \`hcp in 9..13\`
+- \`2D\` → \`(hcp in 9..13 and s >= 4 and h >= 4)\`
 
 ### (1H) X (P) ?
 
@@ -3230,6 +3246,42 @@ Dealer filters (paste into the custom filter box; derived from the data):
 - \`2C\` → \`hcp in 7..20\`
 - \`2D\` → \`((hcp in 4..18 and h >= 4) or (hcp in 12..18 and s <= 3 and h <= 3) or (hcp in 12..18 and d >= 5) or (hcp in 12..18 and c >= 5))\`
 
+## Passed-hand responses: 1x (P) ? by a passed responder
+
+Responder already passed, then partner opened in 3rd or 4th seat. Two things
+move together: the responder is **capped below opening strength**, and partner’s
+shaded 3rd/4th-seat opening is lighter than a 1st/2nd-seat one — so the whole
+exchange runs on fewer values. Game-forcing sequences are off the table; a new
+suit is non-forcing and jumps turn fit-showing or invitational. The split below
+is by seat only (passed vs live responder), pooling systems and vulnerability.
+Contexts are the same 1x (P) y responses tabulated above, restricted to those
+with ≥50 passed-hand samples.
+
+| response | passed p5/**med**/p95 (n) | live p5/**med**/p95 (n) | Δmed | Δp95 |
+|---|---|---|---|---|
+| 1NT (P) 2C | 5/**9**/11 (474) | 5/**10**/15 (4533) | -1 | -4 |
+| 1C (P) 1H | 5/**9**/11 (435) | 5/**10**/16 (4800) | -1 | -5 |
+| 1C (P) 1D | 4/**6**/11 (421) | 3/**7**/16 (4858) | -1 | -5 |
+| 1D (P) 1H | 5/**8**/11 (274) | 5/**9**/16 (5375) | -1 | -5 |
+| 1H (P) 1S | 6/**8**/10 (271) | 5/**10**/16 (3451) | -2 | -6 |
+| 1S (P) 1NT | 6/**8**/10 (260) | 4/**8**/12 (4192) | 0 | -2 |
+| 1NT (P) 2D | 5/**8**/10 (226) | 3/**8**/16 (1948) | 0 | -6 |
+| 1D (P) 1S | 6/**9**/11 (216) | 5/**10**/15 (5280) | -1 | -4 |
+| 1C (P) 1S | 5/**9**/10 (215) | 5/**10**/16 (3869) | -1 | -6 |
+| 2C (P) 2D | 2/**5**/10 (186) | 2/**7**/16 (1776) | -2 | -6 |
+| 1H (P) 2C | 7/**10**/11 (129) | 9/**13**/18 (1546) | -3 | -7 |
+| 1NT (P) 2H | 5/**8**/11 (117) | 3/**9**/16 (2146) | -1 | -5 |
+| 1S (P) 2S | 5/**7**/9 (107) | 4/**8**/10 (1264) | -1 | -1 |
+| 1NT (P) 3NT | 8/**10**/11 (105) | 8/**11**/15 (1547) | -1 | -4 |
+| 1S (P) 2C | 7/**9**/11 (102) | 9/**13**/18 (2657) | -4 | -7 |
+| 1H (P) 2H | 5/**7**/9 (97) | 5/**8**/10 (1071) | -1 | -1 |
+| 1C (P) 1NT | 8/**10**/11 (86) | 7/**10**/16 (848) | 0 | -5 |
+| 1H (P) 1NT | 6/**8**/10 (85) | 4/**9**/13 (1319) | -1 | -3 |
+| 2NT (P) 3C | 2/**7**/10 (82) | 4/**7**/14 (1329) | 0 | -4 |
+| 2NT (P) 3H | 5/**9**/10 (55) | 3/**7**/12 (372) | +2 | -2 |
+
+Weighted across the 20 contexts shown (3943 passed samples), a passed responder’s median sits 1.1 HCP lower and its p95 4.6 HCP lower than a live responder’s — the top of the range compresses hardest, which is the passed-hand cap showing through.
+
 ## Reverse-engineering the 1C complex: what does each bid show?
 
 Single 1C-auction bids are multi-way (a transfer-walsh 1S = weak no-major OR
@@ -3314,6 +3366,126 @@ cross-checking against the published convention cards.)
 | 5–11 · 4♠ only | 122 | 2% | 67% | 11% | 5% | · | · | · | 15% |
 | 5–11 · 4-4+ majors | 116 | 47% | 25% | 1% | 9% | 12% | 3% | · | 3% |
 | 5–11 · no 4M | 87 | 1% | 1% | 17% | 29% | 20% | · | 17% | 15% |
+
+## Filter accuracy: how well each derived filter matches the field
+
+Each dealer filter is a hard yes/no box, fit to cover ~90% of the players who made
+the bid. This section scores those boxes as classifiers against the field they
+describe. For a context (e.g. RHO opens a natural 1♣, direct seat) we take every
+decision faced, label each hand with the action it took, then test the derived
+rule’s box on it:
+
+- **precision** = of the hands the filter accepts, the share that actually made the bid;
+- **recall** = of the hands that made the bid, the share the filter accepts;
+- **contested** = of hands that made the bid at least once across the ≥4 tables that
+  faced this exact decision, the share that did **not** make it unanimously — the
+  genuinely split, probabilistic hands a single box cannot represent.
+
+Recall is high by construction (the box is fit to the bidders); precision is the
+honest number. A low-precision row is a box that also accepts hands that pass or
+choose a different call. Rows are sorted worst-precision first. Box-membership is
+evaluated from the structured rule (suit/quality/HCP branches), the same logic the
+\`filterExpr\` compiles to.
+
+| context | bid | faced | field rate | precision | recall | contested | filter |
+|---|---|---|---|---|---|---|---|
+| (1D) ? | 3C | 25322 | 0.7% | 5% | 85% | 100% | \`c >= 5 and top(c,5) >= 2 and ((hcp in 4..12 and d <= 2) or (hcp in 5..12 and d in 3..4))\` |
+| (1C) ? | 2D | 26548 | 1.0% | 5% | 84% | 98% | \`((hcp in 5..14 and s >= 4 and h >= 4) or (hcp in 5..14 and d >= 6))\` |
+| (1C) ? | 2C | 26548 | 1.2% | 7% | 75% | 99% | \`((hcp in 7..15 and c >= 6) or (hcp in 7..15 and s >= 4 and h >= 4))\` |
+| (1H) ? | 3C | 18773 | 0.6% | 8% | 58% | 100% | \`(hcp in 6..14 and c >= 6)\` |
+| (1D) ? | 2H | 25322 | 1.4% | 8% | 94% | 100% | \`h >= 5 and top(h,5) >= 1 and hcp in 5..12\` |
+| (1S) ? | 3C | 20413 | 1.0% | 14% | 74% | 100% | \`(hcp in 4..14 and c >= 6)\` |
+| (1D) ? | 2S | 25322 | 0.7% | 15% | 89% | 100% | \`s >= 6 and top(s,5) >= 1 and ((hcp in 3..12 and d <= 2) or (hcp in 5..12 and d == 3))\` |
+| (1S) ? | 3D | 20413 | 0.9% | 16% | 85% | 100% | \`d >= 6 and top(d,5) >= 2 and ((hcp in 5..11 and s <= 2) or (hcp in 6..11 and s in 3..4))\` |
+| (1C) ? | 3S | 26548 | 0.5% | 17% | 93% | — | \`s >= 6 and top(s,5) >= 2 and hcp in 4..11\` |
+| (1D) ? | 3H | 25322 | 0.8% | 18% | 90% | — | \`h >= 6 and top(h,5) >= 2 and hcp in 6..11\` |
+| (1C) ? | 3H | 26548 | 0.8% | 18% | 96% | 100% | \`h >= 6 and top(h,5) >= 2 and ((hcp in 4..12 and c <= 2) or (hcp in 7..12 and c in 3..4))\` |
+| (1S) ? | 3H | 20413 | 0.9% | 18% | 93% | — | \`h >= 6 and top(h,5) >= 2 and hcp in 4..12\` |
+| (1H) ? | 1NT | 18773 | 2.8% | 19% | 92% | 91% | \`hcp in 14..17\` |
+| (1H) ? | 2C | 18773 | 3.9% | 22% | 86% | 98% | \`c >= 5 and top(c,5) >= 2 and ((hcp in 8..16 and h <= 2) or (hcp in 9..16 and h == 3))\` |
+| (1H) ? | 3D | 18773 | 0.8% | 23% | 84% | — | \`d >= 6 and top(d,5) >= 2 and ((hcp in 3..11 and h <= 2) or (hcp in 4..11 and h in 3..4))\` |
+| (1D) ? | 3S | 25322 | 0.7% | 24% | 90% | — | \`s >= 6 and top(s,5) >= 2 and ((hcp in 5..10 and d <= 2) or (hcp in 6..10 and d == 3))\` |
+| (1H) ? | 2D | 18773 | 3.5% | 26% | 95% | 82% | \`d >= 5 and top(d,5) >= 1 and ((hcp in 8..16 and h <= 2) or (hcp in 9..16 and h in 3..4))\` |
+| (1S) ? | X | 20413 | 8.1% | 29% | 93% | 89% | \`((hcp in 10..17 and s <= 2 and h >= 3 and d >= 2 and c >= 2) or (hcp in 12..17 and s == 3 and h >= 3 and d >= 2 and c >= 2) or hcp >= 18)\` |
+| (1C) ? | 2H | 26548 | 1.7% | 29% | 83% | 98% | \`h >= 6 and (hcp >= 11 or top(h,5) >= 2) and ((hcp in 4..12 and c <= 2) or (hcp in 5..12 and c in 3..4))\` |
+| (1C) ? | 2S | 26548 | 1.4% | 30% | 90% | 100% | \`s >= 6 and top(s,5) >= 1 and hcp in 4..12\` |
+| (1S) ? | 2C | 20413 | 3.7% | 30% | 93% | 90% | \`c >= 5 and top(c,5) >= 2 and ((hcp in 8..16 and s <= 2) or (hcp in 10..16 and s in 3..4))\` |
+| (1H) ? | 2S | 18773 | 1.8% | 31% | 88% | 100% | \`s >= 6 and top(s,5) >= 2 and hcp in 6..12\` |
+| (1S) ? | 2D | 20413 | 5.3% | 35% | 89% | 92% | \`d >= 5 and top(d,5) >= 2 and ((hcp in 8..16 and s <= 2) or (hcp in 9..16 and s in 3..4))\` |
+| (1D) ? | 2C | 25322 | 4.3% | 36% | 92% | 85% | \`c >= 5 and top(c,5) >= 2 and hcp in 9..16\` |
+| (1D) ? | 1NT | 25322 | 3.2% | 37% | 85% | 88% | \`(has(d,a) or (has(d,k) and d >= 2) or (has(d,q) and d >= 3)) and hcp in 14..18\` |
+| (1C) ? | X | 26548 | 8.3% | 37% | 88% | 84% | \`((hcp in 10..17 and c <= 2 and s >= 3 and h >= 3 and d >= 2) or (hcp in 12..17 and c in 3..4 and s >= 3 and h >= 3 and d >= 2) or hcp >= 18)\` |
+| (1S) ? | 1NT | 20413 | 3.0% | 38% | 94% | 89% | \`(has(s,a) or (has(s,k) and s >= 2) or (has(s,q) and s >= 3)) and hcp in 14..18\` |
+| (1H) ? | X | 18773 | 11.4% | 39% | 91% | 82% | \`((hcp in 10..17 and h <= 2 and s >= 3 and d >= 2 and c >= 2) or (hcp in 12..17 and h == 3 and s >= 3 and d >= 2 and c >= 2) or hcp >= 18)\` |
+| (1D) ? | 4S | 25322 | 0.5% | 40% | 93% | — | \`s >= 7 and top(s,5) >= 3 and hcp in 6..15\` |
+| (1C) ? | 1NT | 26548 | 3.3% | 42% | 78% | 92% | \`(has(c,a) or (has(c,k) and c >= 2) or (has(c,q) and c >= 3)) and hcp in 14..17\` |
+| (1S) ? | 2NT | 20413 | 0.8% | 45% | 83% | — | \`(hcp in 7..20 and c >= 5 and d >= 5)\` |
+| (1S) ? | 2S | 20413 | 1.3% | 45% | 95% | — | \`h >= 5 and ((hcp in 6..16 and d >= 5) or (hcp in 6..16 and c >= 5))\` |
+| (1D) ? | X | 25322 | 10.1% | 46% | 83% | 78% | \`((hcp in 10..17 and d <= 2 and s >= 3 and h >= 3 and c >= 3) or (hcp in 12..17 and d == 3 and s >= 3 and h >= 3 and c >= 3) or hcp >= 18)\` |
+| (1S) ? | 2H | 20413 | 6.4% | 48% | 94% | 84% | \`h >= 5 and top(h,5) >= 1 and (hcp >= 11 or top(h,5) >= 2) and hcp in 9..16\` |
+| (1C) ? | 1D | 26548 | 7.7% | 49% | 86% | 83% | \`d >= 5 and top(d,5) >= 1 and ((hcp in 6..15 and c <= 2) or (hcp in 7..15 and c in 3..5))\` |
+| (1D) ? | 2NT | 25322 | 0.6% | 49% | 90% | — | \`(hcp in 8..17 and c >= 5 and h >= 5)\` |
+| (1H) ? | 4S | 18773 | 0.8% | 53% | 85% | — | \`s >= 7 and top(s,5) >= 2 and ((hcp in 8..15 and h <= 2) or (hcp in 11..15 and h == 3))\` |
+| (1C) ? | 2NT | 26548 | 0.5% | 54% | 86% | — | \`(hcp in 9..16 and d >= 5 and h >= 5)\` |
+| (1H) ? | 2NT | 18773 | 1.3% | 54% | 88% | — | \`(hcp in 6..13 and c >= 5 and d >= 5)\` |
+| (1H) ? | 1S | 18773 | 12.0% | 61% | 92% | 79% | \`s >= 5 and top(s,5) >= 1 and ((hcp in 6..16 and h <= 2) or (hcp in 8..16 and h in 3..4))\` |
+| (1D) ? | 1H | 25322 | 11.3% | 63% | 89% | 73% | \`h >= 5 and top(h,5) >= 1 and hcp in 7..15\` |
+| (1C) ? | 1H | 26548 | 10.7% | 63% | 87% | 82% | \`h >= 5 and top(h,5) >= 1 and hcp in 7..16\` |
+| (1H) ? | 2H | 18773 | 2.4% | 64% | 89% | 96% | \`s >= 5 and ((hcp in 8..15 and d >= 5) or (hcp in 8..15 and c >= 5))\` |
+| (1D) ? | 1S | 25322 | 11.5% | 67% | 91% | 71% | \`s >= 5 and top(s,5) >= 1 and hcp in 7..15\` |
+| (1C) ? | 1S | 26548 | 12.0% | 75% | 92% | 77% | \`s >= 5 and top(s,5) >= 1 and hcp in 7..15\` |
+| (1D) ? | 2D | 25322 | 2.1% | 79% | 89% | 100% | \`s >= 5 and h >= 5 and hcp in 6..14\` |
+
+Reading the table. The old shapeless HCP-only boxes have been replaced by shape:
+unusual 2NT now carries its two lowest unbid suits (e.g. (1♣) 2NT = ♦+♥ 5-5,
+precision ~1% → 54%) and jump overcalls carry their 6-card suit — the derived rule
+detects the two-suiter / long-suit shape the field actually holds (see the shape
+detection in the dealer-integration notes). What remains low-precision at the top of
+the table is a different thing: **rare, highly optional bids** — weak jump overcalls
+and preempts at ~0.5–1.5% base rate — where even a shape-correct hand usually picks a
+different call (pass, a simple overcall, another level). Recall stays high and the
+contested share ~100%, so that is a base-rate / gradient effect, not a missing
+constraint. **Natural suit overcalls** top out around 60–75% precision with ~75% of
+bids contested across tables: the honest ceiling of a hard box on a genuinely
+probabilistic call, and the case for a probability-weighted filter rather than a
+wider or narrower rectangle.
+
+### Worked example: (1C) 1S
+
+Of 26548 hands that faced a natural/short 1♣ in the direct seat, 3186 overcalled 1♠. The box catches 92% of them (recall) but only 75% of box-matching hands actually overcall 1♠ (precision) — it is too generous in the middle and too tight in the tails.
+
+**Accepted but did not bid 1♠ (936).** These hands instead: P 284, 2S 206, 2D 124, 3S 100, 2C 89, X 54, 4S 51, 1H 28 — passes and stronger spade actions (jumps to 2♠/3♠/4♠) the box cannot tell apart from a simple 1♠.
+
+**Overcalled 1♠ but outside the box (269, 8% of bidders).** Reasons (may overlap): 118 too strong for the HCP cap, 83 too weak, 66 with a shorter suit than the length floor, 10 below the quality floor.
+
+The decision is a **gradient, not a box** — P(overcall 1♠) rises then falls with
+strength and with suit length, so no single rectangle is both precise and complete:
+
+| holding a real ♠ suit (s≥5, top5≥1) | ≤6 | 7–9 | 10–12 | 13–15 | 16–18 | 19+ |
+|---|---|---|---|---|---|---|
+| P(1♠) by HCP | 9% | 63% | 80% | 83% | 54% | 2% |
+| n | 948 | 1431 | 1689 | 790 | 206 | 43 |
+
+| at 10–15 HCP | 3♠ | 4♠ | 5♠ | 6♠ | 7+♠ |
+|---|---|---|---|---|---|
+| P(1♠) by spade length | 0% | 2% | 85% | 78% | 42% |
+| n | 3032 | 2859 | 1918 | 413 | 157 |
+
+The HCP cap at 15 discards the 16–18 band (which still overcalls 1♠ around half the
+time, choosing it over a double), while the 7–9 shoulder inside the box overcalls far
+less than the 10–15 core.
+
+**Three breadth presets.** Rather than one box, the dealer offers three coverage
+levels of the same observed range — conservative keeps the high-confidence core,
+aggressive reaches the observed extremes (see the dealer-integration notes for why
+this beats a single box or a probability). The precision/recall trade-off is exactly
+what you would expect, and every preset stays within hands the field actually bid:
+
+| preset | precision | recall | filter |
+|---|---|---|---|
+| Conservative | 80% | 55% | \`s >= 5 and top(s,5) >= 2 and hcp in 9..14\` |
+| Normal | 75% | 92% | \`s >= 5 and top(s,5) >= 1 and hcp in 7..15\` |
+| Aggressive | 67% | 97% | \`s >= 5 and top(s,5) >= 1 and hcp in 5..16\` |
 
 ## Book vs field
 
@@ -3480,7 +3652,9 @@ HCP-by-their-length cross-tab, stopper rate, and a derived \`rule\`:
     ],
     "common": [],
     "filterExpr": "((hcp in 10..17 and h <= 2 and s >= 3 and d >= 2 and c >= 2) or (hcp in 12..17 and h == 3 and s >= 3 and d >= 2 and c >= 2) or hcp >= 18)"
-  }
+  },
+  "filterConservative": "((hcp in 11..17 and h <= 2 and s >= 3 and d >= 2 and c >= 2) or (hcp in 13..17 and h == 3 and s >= 3 and d >= 2 and c >= 2) or hcp >= 18)",
+  "filterAggressive": "((hcp in 9..17 and h <= 2 and s >= 3 and d >= 2 and c >= 2) or (hcp in 11..17 and h == 3 and s >= 3 and d >= 2 and c >= 2) or hcp >= 18)"
 }
 \`\`\`
 
@@ -3510,6 +3684,26 @@ The \`rule\` is the integration contract:
 The histograms are retained so stricter (p10–p90) or looser (min–max) cuts can
 be derived without re-running the study.
 
+**Shape detection.** A bid the natural derivation cannot pin down — unusual 2NT, a
+jump cue, or a jump the field plays two ways — is passed to \`deriveConventionalShape\`,
+which measures the shape components the hands actually hold (the two lowest unbid suits
+5+, both majors 4+, or a single 6+ suit) and unions those covering ≥30%, falling back
+to an HCP range only when none is common. This replaced the shapeless HCP-only boxes
+the filter-accuracy audit flagged: unusual 2NT went from ~1% to ~45–54% precision.
+
+**Breadth presets (conservative / normal / aggressive).** No single box exceeds ~75%
+precision on a natural overcall, because the call is genuinely optional. But the
+variation is between-player *rate*, not *range*: pairs sorted from cautious to bold
+(44%→65% marginal-overcall rate) overcall 1♠ on an essentially identical range —
+same p5/p95, same shape tolerance — they just pull the trigger more or less often
+within it. So a probability would mismodel a player as a dice-roll; instead each rule
+ships three **coverage levels of that one shared range**. \`conservative\` narrows the
+HCP band (quantiles 0.20–0.87) and demands a sounder suit — the high-confidence core;
+\`aggressive\` widens to the observed extremes (0.01–0.99) and relaxes the suit floor;
+\`normal\` is the field fit. All three stay within hands the field actually bid — the
+knob picks how inclusive, it does not invent hands. \`rule.filterExpr\` is the normal
+level; \`rule.filterConservative\` / \`rule.filterAggressive\` carry the other two.
+
 ## Files
 
 - \`research/bidding/bid-profiles.json\` — machine-readable profiles (v2): every
@@ -3521,4 +3715,4 @@ be derived without re-running the study.
 - Profiles also cover families not tabulated above (e.g. sandwich-seat actions
   \`(1C) P (1S) ?\`) — filter by \`family\`.
 
-`;function m(o){const a=[];let e="";for(const n of o)n==="♥"||n==="♦"?(e&&(a.push(e),e=""),a.push(t("span",{class:"suit-red"},[n]))):e+=n;return e&&a.push(e),a}function g(o){const a=[];for(const e of o)e.t==="text"?a.push(...m(e.s)):e.t==="bold"?a.push(t("strong",{},m(e.s))):e.t==="link"?a.push(t("a",{href:e.href,class:"rep-link"},[e.s])):a.push(t("code",{class:"rep-code-inline",title:"Click to copy"},[e.s]));return a}const W=/^[\d\s.,%()\/±×–—+*-]*\d[\d\s.,%()\/±×–—+*-]*$/;function $(o){if(o.some(e=>e.t==="code"))return!1;const a=o.map(e=>e.s).join("");return W.test(a.replace(/\*\*/g,"").trim())}function I(o,a,e){const n=[],h=new Map(o.tokens.map(s=>[s.anchor,s])),r=Math.max(...o.tokens.map(s=>s.pct));for(let s=a;s<=e;s++){const i=h.get(s);if(!i){n.push(t("span",{class:"dist-slot dist-empty"},[]));continue}const u=.08+.5*(i.pct/100);n.push(t("span",{class:"dist-slot"+(i.pct===r?" dist-peak":""),style:`background: rgba(29,111,66,${u.toFixed(3)})`,title:`${i.label}: ${i.pct}%`},[t("span",{class:"dist-label"},[i.label]),t("span",{class:"dist-pct"},[String(i.pct)])]))}const p=[];return o.prefix!==""&&p.push(t("span",{class:"dist-prefix"},m(o.prefix))),p.push(t("span",{class:"dist-grid"},n)),t("span",{class:"dist"},p)}function U(o,a){const e=t("thead",{},[t("tr",{},o.map(i=>t("th",{},g(i))))]),n=o.length,h=a.map(i=>i.map(u=>u.some(f=>f.t!=="text")?null:K(u.map(f=>f.s).join("")))),r=new Array(n).fill(1/0),p=new Array(n).fill(-1/0);for(const i of h)for(let u=0;u<i.length;u++){const f=i[u];if(f)for(const b of f.tokens)r[u]=Math.min(r[u],b.anchor),p[u]=Math.max(p[u],b.anchor)}const s=t("tbody",{},a.map((i,u)=>t("tr",{},i.map((f,b)=>{const H=h[u][b];return H&&p[b]-r[b]<=11?t("td",{class:"dist-td"},[I(H,r[b],p[b])]):t("td",{class:$(f)?"num":!1},g(f))}))));return t("div",{class:"rep-table-wrap"},[t("table",{class:"rep-table"},[e,s])])}function G(o){switch(o.t){case"p":return t("p",{class:"rep-p"},g(o.inline));case"ul":return t("ul",{class:"rep-ul"},o.items.map(a=>t("li",{},g(a))));case"table":return U(o.header,o.rows);case"code":return t("pre",{class:"rep-code"},[o.text]);default:return t("p",{},[])}}function J(o){const a=o.find(d=>d.t==="h1"),e=t("div",{},[]),n=t("div",{class:"bids-main"},[]),h=[],r=new Set,p=d=>{let l=j(d)||"section",c=2;for(;r.has(l);)l=`${j(d)}-${c++}`;return r.add(l),l};let s=null,i=null;const u=d=>{const l=G(d);i?i.el.append(l):s?(s.el.append(l),s.hasOwnContent=!0):n.append(l),i&&(i.searchText+=" "+V(d))};for(const d of o)if(d.t!=="h1"){if(d.t==="h2"){const l=p(d.text),c=t("a",{href:`#${l}`},m(d.text));e.append(c);const v=t("section",{class:"rep-section",id:l},[t("h2",{},m(d.text))]);n.append(v),s={el:v,tocLink:c,subs:[],hasOwnContent:!1},h.push(s),i=null;continue}if(d.t==="h3"){const l=p(d.text),c=t("details",{class:"rep-sub",id:l,open:!0},[t("summary",{},m(d.text))]),v=t("a",{href:`#${l}`,class:"toc-h3"},m(d.text));e.append(v),((s==null?void 0:s.el)??n).append(c),i={el:c,tocLink:v,searchText:d.text.toLowerCase()},s==null||s.subs.push(i);continue}u(d)}const f=t("input",{class:"bids-filter",type:"search",placeholder:'Filter contexts… e.g. "1S (2H)", "balance", "X"'}),b=t("span",{class:"bids-count"},[]),H=t("button",{type:"button"},["Expand all"]),D=t("button",{type:"button"},["Collapse all"]),X=d=>{for(const l of h)for(const c of l.subs)c.el.open=d};H.addEventListener("click",()=>X(!0)),D.addEventListener("click",()=>X(!1));const T=()=>{const d=f.value.trim().toLowerCase();let l=0,c=0;for(const v of h){let F=!1;for(const y of v.subs){c++;const P=d===""||y.searchText.includes(d);y.el.classList.toggle("hidden",!P),y.tocLink.classList.toggle("hidden",!P),P&&(l++,F=!0,d!==""&&(y.el.open=!0))}const q=d===""||F||v.hasOwnContent;v.el.classList.toggle("hidden",!q),v.tocLink.classList.toggle("hidden",!q)}b.textContent=d===""?`${c} contexts`:`${l} of ${c} contexts`};f.addEventListener("input",T);const C=t("div",{class:"bids-toast"},[]);let w=0;n.addEventListener("click",d=>{var v;const l=d.target.closest("code.rep-code-inline");if(!l)return;const c=l.textContent??"";(v=navigator.clipboard)==null||v.writeText(c).then(()=>{C.textContent=`Copied: ${c}`,C.classList.add("show"),window.clearTimeout(w),w=window.setTimeout(()=>C.classList.remove("show"),1600)})});const N=document.getElementById("app");N.classList.add("bids-app");const B=t("aside",{class:"bids-toc"},[t("p",{class:"bids-toc-title"},["Contents"]),e]),x=M(),A=t("details",{class:"bids-datamap"},[t("summary",{},[t("span",{class:"bids-datamap-title"},["Tournament data"]),t("span",{class:"bids-datamap-sub"},[x.summary])]),t("div",{class:"bids-datamap-body"},x.nodes)]);N.append(O("bidding"),t("header",{class:"app-header"},[t("h1",{},["WesData"]),t("p",{class:"tagline"},[a&&a.t==="h1"?a.text:"Bidding ranges from championship data"])]),A,t("div",{class:"bids-controls"},[f,H,D,b]),t("div",{class:"bids-layout"},[B,n]),C),T()}function V(o){switch(o.t){case"p":return o.inline.map(a=>a.s).join("").toLowerCase();case"ul":return o.items.map(a=>a.map(e=>e.s).join("")).join(" ").toLowerCase();case"table":return o.rows.map(a=>a.map(e=>e.map(n=>n.s).join("")).join(" ")).join(" ").toLowerCase();case"code":return o.text.toLowerCase();default:return o.text.toLowerCase()}}J(R(E));
+`;function C(a){return a.replace(/ \u2014 /g,": ").replace(/\u2014/g,"–")}function H(a){const i=C(a),e=[];let n="";for(const d of i)d==="♥"||d==="♦"?(n&&(e.push(n),n=""),e.push(t("span",{class:"suit-red"},[d]))):n+=d;return n&&e.push(n),e}function w(a){const i=[];for(const e of a)e.t==="text"?i.push(...H(e.s)):e.t==="bold"?i.push(t("strong",{},H(e.s))):e.t==="link"?i.push(t("a",{href:e.href,class:"rep-link"},[C(e.s)])):i.push(t("code",{class:"rep-code-inline",title:"Click to copy",tabindex:0,role:"button"},[e.s]));return i}const V=/^[\d\s.,%()\/±×–—+*-]*\d[\d\s.,%()\/±×–—+*-]*$/;function Y(a){if(a.some(e=>e.t==="code"))return!1;const i=a.map(e=>e.s).join("");return V.test(i.replace(/\*\*/g,"").trim())}function _(a,i,e){const n=[],d=new Map(a.tokens.map(l=>[l.anchor,l])),h=Math.max(...a.tokens.map(l=>l.pct));for(let l=i;l<=e;l++){const s=d.get(l);if(!s){n.push(t("span",{class:"dist-slot dist-empty"},[]));continue}const c=.08+.5*(s.pct/100);n.push(t("span",{class:"dist-slot"+(s.pct===h?" dist-peak":""),style:`background: rgb(var(--heat-rgb) / ${c.toFixed(3)})`,title:`${s.label}: ${s.pct}%`},[t("span",{class:"dist-label"},[s.label]),t("span",{class:"dist-pct"},[String(s.pct)])]))}const u=[];return a.prefix!==""&&u.push(t("span",{class:"dist-prefix"},H(a.prefix))),u.push(t("span",{class:"dist-grid"},n)),t("span",{class:"dist"},u)}function z(a,i){const e=t("thead",{},[t("tr",{},a.map(s=>t("th",{},w(s))))]),n=a.length,d=i.map(s=>s.map(c=>c.some(b=>b.t!=="text")?null:G(c.map(b=>b.s).join("")))),h=new Array(n).fill(1/0),u=new Array(n).fill(-1/0);for(const s of d)for(let c=0;c<s.length;c++){const b=s[c];if(b)for(const v of b.tokens)h[c]=Math.min(h[c],v.anchor),u[c]=Math.max(u[c],v.anchor)}const l=t("tbody",{},i.map((s,c)=>t("tr",{},s.map((b,v)=>{const y=d[c][v];return y&&u[v]-h[v]<=11?t("td",{class:"dist-td"},[_(y,h[v],u[v])]):t("td",{class:Y(b)?"num":!1},w(b))}))));return t("div",{class:"rep-table-wrap"},[t("table",{class:"rep-table"},[e,l])])}function Z(a){switch(a.t){case"p":return t("p",{class:"rep-p"},w(a.inline));case"ul":return t("ul",{class:"rep-ul"},a.items.map(i=>t("li",{},w(i))));case"table":return z(a.header,a.rows);case"code":return t("pre",{class:"rep-code"},[a.text]);default:return t("p",{},[])}}function n1(a){const i=a.find(o=>o.t==="h1"),e=t("div",{},[]),n=t("select",{class:"bids-jump","aria-label":"Jump to a section"},[t("option",{value:""},["Jump to…"])]),d=t("div",{class:"bids-main"},[]),h=[],u=new Set,l=o=>{let r=R(o)||"section",p=2;for(;u.has(r);)r=`${R(o)}-${p++}`;return u.add(r),r};let s=null,c=null;const b=o=>{const r=Z(o);c?c.el.append(r):s?(s.el.append(r),s.hasOwnContent=!0):d.append(r),c&&(c.searchText+=" "+e1(o))};for(const o of a)if(o.t!=="h1"){if(o.t==="h2"){const r=l(o.text),p=t("a",{href:`#${r}`},H(o.text));e.append(p);const f=t("section",{class:"rep-section",id:r},[t("h2",{},H(o.text))]);n.append(t("option",{value:r},[C(o.text)])),d.append(f),s={el:f,tocLink:p,subs:[],hasOwnContent:!1},h.push(s),c=null;continue}if(o.t==="h3"){const r=l(o.text),p=t("details",{class:"rep-sub",id:r},[t("summary",{},H(o.text))]),f=t("a",{href:`#${r}`,class:"toc-h3"},H(o.text));e.append(f),n.append(t("option",{value:r},[` ${C(o.text)}`])),((s==null?void 0:s.el)??d).append(p),c={el:p,tocLink:f,searchText:o.text.toLowerCase()},s==null||s.subs.push(c);continue}b(o)}const v=t("input",{class:"bids-filter",type:"search",placeholder:"Filter: 1S (2H), balance, X…","aria-label":"Filter contexts"}),y=t("span",{class:"bids-count"},[]),X=t("button",{type:"button",class:"btn--sm"},["Expand all"]),N=t("button",{type:"button",class:"btn--sm"},["Collapse all"]),x=o=>{for(const r of h)for(const p of r.subs)p.el.open=o};X.addEventListener("click",()=>x(!0)),N.addEventListener("click",()=>x(!1));const F=()=>{const o=v.value.trim().toLowerCase();let r=0,p=0;for(const f of h){let B=!1;for(const S of f.subs){p++;const T=o===""||S.searchText.includes(o);S.el.classList.toggle("hidden",!T),S.tocLink.classList.toggle("hidden",!T),T&&(r++,B=!0,o!==""&&(S.el.open=!0))}const A=o===""||B||f.hasOwnContent;f.el.classList.toggle("hidden",!A),f.tocLink.classList.toggle("hidden",!A)}y.textContent=o===""?`${p} contexts`:`${r} of ${p} contexts`};v.addEventListener("input",F);const g=t("div",{class:"bids-toast",role:"status"},[]);let k=0;d.addEventListener("keydown",o=>{if(o.key!=="Enter"&&o.key!==" ")return;const r=o.target.closest("code.rep-code-inline");r&&(o.preventDefault(),r.click())}),d.addEventListener("click",o=>{var f;const r=o.target.closest("code.rep-code-inline");if(!r)return;const p=r.textContent??"";(f=navigator.clipboard)==null||f.writeText(p).then(()=>{g.textContent=`Copied: ${p}`,g.classList.add("show"),window.clearTimeout(k),k=window.setTimeout(()=>g.classList.remove("show"),1600)})});const D=(o,r)=>{const p=document.getElementById(o);p&&(p instanceof HTMLDetailsElement&&(p.open=!0),r&&p.scrollIntoView({block:"start"}))};e.addEventListener("click",o=>{const r=o.target.closest("a");r!=null&&r.hash&&D(decodeURIComponent(r.hash.slice(1)),!1)}),n.addEventListener("change",()=>{n.value&&(history.replaceState(null,"",`#${n.value}`),D(n.value,!0))});let m=null;const L=new Map(h.map(o=>[o.el,o.tocLink])),E=new IntersectionObserver(o=>{for(const r of o){if(!r.isIntersecting)continue;const p=L.get(r.target);!p||p===m||(m==null||m.classList.remove("active"),m==null||m.removeAttribute("aria-current"),p.classList.add("active"),p.setAttribute("aria-current","true"),m=p)}},{rootMargin:"-140px 0px -60% 0px"});for(const o of h)E.observe(o.el);const q=document.getElementById("app");q.classList.add("bids-app");const M=t("aside",{class:"bids-toc"},[t("p",{class:"bids-toc-title"},["Contents"]),e]),j=W(),Q=t("details",{class:"bids-datamap"},[t("summary",{},[t("span",{class:"bids-datamap-title"},["Tournament data"]),t("span",{class:"bids-datamap-sub"},[j.summary])]),t("div",{class:"bids-datamap-body"},j.nodes)]);K("bidding"),q.append(t("header",{class:"app-header"},[t("h1",{},["WesData"]),t("p",{class:"tagline"},[i&&i.t==="h1"?C(i.text):"Bidding ranges from championship data"])]),Q,t("div",{class:"bids-controls"},[v,n,t("span",{class:"bids-btns"},[X,N,y])]),t("div",{class:"bids-layout"},[M,d]),g),F(),location.hash.length>1&&D(decodeURIComponent(location.hash.slice(1)),!0)}function e1(a){switch(a.t){case"p":return a.inline.map(i=>i.s).join("").toLowerCase();case"ul":return a.items.map(i=>i.map(e=>e.s).join("")).join(" ").toLowerCase();case"table":return a.rows.map(i=>i.map(e=>e.map(n=>n.s).join("")).join(" ")).join(" ").toLowerCase();case"code":return a.text.toLowerCase();default:return a.text.toLowerCase()}}n1(I(J));
